@@ -1,28 +1,73 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+  <div id="app" :key="appKey">
+    <div class="container">
+      <Navigation :nav="navList"/>
+      <div class="content">
+        <router-view/>
+        <p class="copyright">{{copyright}}</p>
+      </div>
     </div>
-    <router-view/>
   </div>
 </template>
-
+<script>
+import Navigation from "@/components/Navigation.vue";
+export default {
+  data() {
+    return {
+      navList: [{ id: 0, title: "Home", url_s: "/" }],
+      copyright: "",
+      appKey:0
+    };
+  },
+  components: {
+    Navigation
+  },
+  created() {
+    this.axios({
+      method: "get",
+      url: "/api",
+      params: this.params({
+        act: "left_navigation"
+      })
+    })
+      .then(res => {
+        this.navList.push(...res.data.result);
+        this.copyright = res.data.result[0].beian;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  },
+  watch: {
+    '$route':function(newUrl,oldUrl){
+      this.appKey=new Date().getTime();
+  }
+  }
+};
+</script>
 <style lang="less">
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
+  width: 100%;
+  height: 100%;
+  .container {
+    width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    .content {
+      p.copyright {
+        width: 910px;
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: ArialMT;
+        font-size: 14px;
+        color: #fff;
+        background: #b8b8b8;
+        margin: 30px 0 0 30px;
+      }
     }
   }
 }
