@@ -25,10 +25,29 @@ export default new Router({
         import('./views/Login.vue'),
     },
     {
-      path:'/register',
-      name:'register',
-      component: ()=>
-      import('./views/Register.vue')
-    }
+      path: '/userCenter',
+      name: 'userCenter?id=8',
+      component: () =>
+        import('./views/UserCenter.vue'),
+      meta: {
+        title: 'User Center'
+      },
+      children: [{
+        path: '/',
+        name: 'userCenter',
+        component: () =>
+          import('./views/UserCenterDefult.vue')
+      },
+      {
+        path: '/userInfo',
+        name: 'userInfo?id=8',
+        component: () =>
+          import('./views/UserInfo.vue'),
+        meta: {
+          title: 'Personal Information'
+        }
+      }
+      ]
+    },
   ]
 })

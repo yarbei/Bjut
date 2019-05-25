@@ -25,7 +25,7 @@
         </el-form>
         <button @click="login">Log in</button>
         <span class="forgot-pass" @click="forgotPass">Forgot your password?</span>
-        <button @click="register">Create New Profile</button>
+        <button @click="creatNewProfile">Create New Profile</button>
       </div>
       <!-- 找回密码窗口 -->
       <div class="login-wins" v-show="isPass">
@@ -51,7 +51,36 @@
         <button @click="sendEmail">Send Email</button>
         <button @click="forgotPassReturn">Return</button>
       </div>
-      <div class="content">
+      <!-- 注册窗口 -->
+      <div class="login-wins register" v-show="isRegister">
+        <h1>Create New Profile</h1>
+        <el-form
+          :label-position="labelPosition"
+          label-width="80px"
+          :model="formRegister"
+          :rules="rules"
+          ref="ruleForm"
+        >
+          <el-form-item label="Email Address" prop="remailAddress">
+            <el-input placeholder="Email Address" v-model="formRegister.email">
+              <i slot="prefix" class="el-input__icon el-icon-user"></i>
+            </el-input>
+          </el-form-item>
+          <el-form-item label="Password" prop="pass">
+            <el-input placeholder="Password" v-model="formRegister.pass" show-password>
+              <i slot="prefix" class="el-input__icon el-icon-key"></i>
+            </el-input>
+          </el-form-item>
+          <el-form-item label="Confirm Password" prop="checkPass">
+            <el-input placeholder="Confirm Password" v-model="formRegister.checkPass" show-password>
+              <i slot="prefix" class="el-input__icon el-icon-key"></i>
+            </el-input>
+          </el-form-item>
+        </el-form>
+        <button @click="confirm">Confirm</button>
+        <button @click="RegisterReturn">Return</button>
+      </div>
+      <div class="content" v-show="isContent">
         <h1>Welcome to your ISRERM2020 Conference Profile!</h1>
         <p>If you are visiting this page for the first time, please create a new profile by clicking on "Create New Profile". Once the profile has been created, it is possible to access your profile again at any time, by entering your email and password.</p>
         <h2>Four-step operation to reset your new password:</h2>
@@ -70,8 +99,30 @@
 <script>
 export default {
   data() {
+    var validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        if (this.ruleForm.checkPass !== "") {
+          this.$refs.ruleForm.validateField("checkPass");
+        }
+        callback();
+      }
+    };
+    var validatePass2 = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.ruleForm.pass) {
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
+      }
+    };
     return {
       isLogin: true, //登录表单是否显示
+      isPass: false, //找回密码是否显示
+      isRegister: false,
+      isContent: true, //文字内容是否显示
       labelPosition: "top", //输入框提示信息显示的方式
       formLogin: {
         //登录表单绑定的数据
@@ -82,13 +133,16 @@ export default {
         email: "",
         password: "",
         emailAddress: "",
-        newPassword: ""
+        newPassword: "",
+        remailAddress: "",
+        pass: "",
+        checkPass: ""
       },
       rules: {
         //表单的验证规则
         email: [
           { required: true, message: "请输入Email", trigger: "blur" },
-          { min: 10, message: "最少10个字符", trigger: "blur" }
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
         ],
         password: [
           { required: true, message: "请输入密码", trigger: "blur" },
@@ -96,18 +150,31 @@ export default {
         ],
         emailAddress: [
           { required: true, message: "请输入Email", trigger: "blur" },
-          { min: 10, message: "最少10个字符", trigger: "blur" }
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
         ],
         newPassword: [
           { required: true, message: "请输入密码", trigger: "blur" },
           { min: 6, message: "最少6个字符", trigger: "blur" }
-        ]
+        ],
+        remailAddress: [
+          { required: true, message: "请输入Email", trigger: "blur" },
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+
+        ],
+        pass: [{ required:true,validator: validatePass, trigger: "blur" }],
+        checkPass: [{ required:true,validator: validatePass2, trigger: "blur" }]
       },
-      isPass: false,
       formPass: {
         //找回密码表单绑定的数据
         email: "",
         password: ""
+      },
+
+      formRegister: {
+        //注册表单绑定的数据
+        email: "",
+        pass: "",
+        checkPass: ""
       }
     };
   },
@@ -126,48 +193,91 @@ export default {
         console.log(res);
         if (res.data.code === 200) {
           this.$message.success(res.data.message);
-          sessionStorage.userId=res.data.p_id,
-          sessionStorage.userEmail=this.formLogin.email
+          sessionStorage.userId = res.data.result.p_id;
+          console.log(res.data)
+          sessionStorage.userEmail = this.formLogin.email;
+          this.$router.push({path:"userInfo?id=8"})
         } else {
           this.$message.error(res.data.message);
         }
       });
     },
-    // 控制登录窗口和找回密码窗口是否显示
-    forgotPass(){
-      this.isLogin=false;
-      this.isPass=true;
+    // 点击找回密码按钮
+    forgotPass() {
+      this.isLogin = false;
+      this.isPass = true;
+      this.isRegister = false;
+      this.isContent = true;
     },
     //提交找回密码信息
-    sendEmail(){
+    sendEmail() {
       this.axios({
-        method:'post',
-        url:'/api',
-        params:this.params({
-          act:''
+        method: "post",
+        url: "/api",
+        params: this.params({
+          act: "",
+          email: this.formPass.email,
+          password: this.formPass.password
         })
-      })
+          .then(res => {
+            console.log(res);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      });
     },
-    //找回密码窗口点击返回按钮
-    forgotPassReturn(){
-      this.isLogin=true;
-      this.isPass=false;
+    //点击找回密码窗口返回按钮
+    forgotPassReturn() {
+      this.isLogin = true;
+      this.isPass = false;
+      this.isRegister = false;
+      this.isContent = true;
     },
     //点击注册按钮
-    register(){
-      this.$router.push({path:'/register?id=8'})
+    creatNewProfile() {
+      this.isLogin = false;
+      this.isPass = false;
+      this.isRegister = true;
+      this.isContent = false;
+    },
+    //注册窗口点击提交注册信息
+    confirm() {
+      this.axios({
+        method: "post",
+        url: "/api",
+        params: this.params({
+          act: "",
+          email: this.formRegister.email,
+          pass: this.formRegister.pass
+        })
+      })
+        .then(res => {
+          console.log(res);
+          this.$router.push({ path: "userInfo?id=8" });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    //注册窗口点击返回按钮
+    RegisterReturn() {
+      this.isLogin = true;
+      this.isPass = false;
+      this.isRegister = false;
+      this.isContent = true;
     }
   }
 };
 </script>
 <style lang="less" scoped>
 img.banner {
-  width: 940px;
+  width: 910px;
   height: 260px;
   margin-left: 30px;
 }
 .login-box {
-  width: 940px;
+  width: 910px;
   margin: 30px 0 0 30px;
   padding: 50px 20px;
   box-sizing: border-box;
@@ -202,7 +312,7 @@ img.banner {
         font-family: Arial-BoldMT;
         font-size: 16px;
         color: #444;
-        margin-top: 26px;
+        margin-top: 10px;
         margin-left: 74px;
         padding: 0;
         height: auto;
@@ -248,6 +358,9 @@ img.banner {
       align-items: center;
       cursor: pointer;
     }
+  }
+  .login-wins.register {
+    height: 552px;
   }
   .content {
     margin-top: 40px;
