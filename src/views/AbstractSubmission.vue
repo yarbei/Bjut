@@ -63,7 +63,9 @@
       <div class="body body3" v-show="body3">
         <img src="../assets/img/step3.png" alt>
         <div class="add-author">Add Author</div>
-        <div  class="note">Please select if this is the corresponding author, Only one Corresponding Author is required.</div>
+        <div
+          class="note"
+        >Please select if this is the corresponding author, Only one Corresponding Author is required.</div>
         <el-form ref="form" :model="form" label-width="150px">
           <el-form-item label="First Name">
             <el-input v-model="form.name"></el-input>
@@ -96,9 +98,18 @@
             <td>Hu</td>
             <td>Andorra</td>
             <td>TGF</td>
-            <td> <label for=""><input type="radio">Yes</label> </td>
-            <td><i class="el-icon-top"></i><i class="el-icon-bottom"></i></td>
-            <td><i class="el-icon-delete"></i>Delete</td>
+            <td>
+              <label for>
+                <input type="radio">Yes
+              </label>
+            </td>
+            <td>
+              <i class="el-icon-top"></i>
+              <i class="el-icon-bottom"></i>
+            </td>
+            <td>
+              <i class="el-icon-delete"></i>Delete
+            </td>
           </tr>
         </table>
         <div class="button-box">
@@ -107,15 +118,15 @@
         </div>
       </div>
       <div class="body body4" v-show="body4">
-        <img src="../assets/img/step4.png" alt="">
+        <img src="../assets/img/step4.png" alt>
         <div class="author-list">Author List</div>
-        <table>
+        <table class="tabel1" border="1">
           <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>Order</td>
+            <td>Name</td>
+            <td>Affiliation</td>
+            <td>Country/Region</td>
+            <td>Corresponding</td>
           </tr>
           <tr>
             <td></td>
@@ -125,6 +136,36 @@
             <td></td>
           </tr>
         </table>
+        <div class="abstract-info">Abstract Information</div>
+        <table class="table2" border="1">
+          <tr>
+            <td>Abstract Title</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Topic</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Remarks</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Abstract File</td>
+            <td></td>
+          </tr>
+        </table>
+        <div class="note">
+          Before you submit your abstract:
+          <br>(1) Please carefully check your abstract and your personal information;
+          <br>(2) Cannot be modified after submission;
+          <br>(3) If you want to modify the body of abstract, please click "Return" button.
+          <br>
+        </div>
+        <div class="button-box">
+          <button class="return" @click="returnStep3">Return</button>
+          <button>Submit</button>
+        </div>
       </div>
     </div>
   </div>
@@ -180,7 +221,7 @@ export default {
       this.body4 = false;
     },
     //步骤3返回步骤2
-    returnStep2(){
+    returnStep2() {
       this.body1 = false;
       this.body2 = true;
       this.body3 = false;
@@ -192,6 +233,13 @@ export default {
       this.body2 = false;
       this.body3 = false;
       this.body4 = true;
+    },
+    //步骤4返回步骤3
+    returnStep3(){
+      this.body1 = false;
+      this.body2 = false;
+      this.body3 = true;
+      this.body4 = false;
     },
     //上传文件的钩子函数
     handleRemove(file, fileList) {
@@ -330,7 +378,7 @@ export default {
       box-sizing: border-box;
       border-bottom: 2px solid #2aace8;
     }
-    .author-list{
+    .author-list {
       width: 100%;
       padding: 10px 18px;
       box-sizing: border-box;
@@ -339,32 +387,75 @@ export default {
       margin-top: 40px;
     }
   }
-  .body3{
-      table{
-        width:100%;
-        border: 1px solid #eaeaea;
-        margin-top: 20px;
-        tr td{
-          text-align: center;
-          height:60px;
-          i{
-            color: #2aace8;
-          }
-        }
-        tr td:last-child{
-          color:#2aace8;
-        }
-        tr:first-child td{
-          font-family: Arial-BoldMT;
-          font-size: 16px;
-          color: #444;
-          font-weight: 700;
-        }
-        tr td:nth-child(2n){
-          width: 20%;
+  .body3 {
+    table {
+      width: 100%;
+      border: 1px solid #eaeaea;
+      margin-top: 20px;
+      tr td {
+        text-align: center;
+        height: 60px;
+        i {
+          color: #2aace8;
         }
       }
+      tr td:last-child {
+        color: #2aace8;
+      }
+      tr:first-child td {
+        font-family: Arial-BoldMT;
+        font-size: 16px;
+        color: #444;
+        font-weight: 700;
+      }
+      tr td:nth-child(2n) {
+        width: 20%;
+      }
     }
+  }
+  .body4 {
+    .author-list {
+      font-family: ArialMT;
+      font-size: 20px;
+      background: none;
+      color: #444;
+      font-weight: 400;
+      border-bottom: 1px solid #e3e3e3;
+      margin-top: 20px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    table {
+      width: 100%;
+      border: 1px solid #eaeaea;
+      margin-top: 20px;
+      tr td {
+        height: 64px;
+        text-align: center;
+        color: #444;
+        font-size: 16px;
+      }
+      tr:first-child{
+        font-weight: 700;
+      }
+    }
+    .abstract-info{
+      margin-top: 20px;
+      color: #2aace8;
+      border-bottom: 2px solid #2aace8;
+      padding-bottom: 20px;
+      box-sizing: border-box;
+    }
+    .table2{
+      tr td:first-child{
+        width: 30%;
+        font-weight: 700;
+      }
+    }
+    .note{
+      line-height: 32px;
+    }
+  }
 }
 </style>
 

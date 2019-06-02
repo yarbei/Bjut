@@ -223,6 +223,8 @@ export default {
       font-size: 16px;
       padding: 10px 20px;
       background: #e9f7fd;
+      box-sizing: border-box;
+      margin-top: 20px;
     }
     .table2 {
       width: 100%;
