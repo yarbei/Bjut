@@ -16,7 +16,7 @@
           :inline="true"
         >
           <el-form-item label="Email">
-            <span>{{email}}</span>
+            <span>{{ruleForm.p_email}}</span>
           </el-form-item>
           <el-form-item label="First Name" prop="p_first_name">
             <el-input v-model="ruleForm.p_first_name"></el-input>
@@ -81,16 +81,16 @@
           <el-form-item label="Address" prop="p_address">
             <el-input v-model="ruleForm.p_address"></el-input>
           </el-form-item>
-          <el-form-item label="Phone" prop="p_phone" class="phone-fax">
-            <el-input v-model.number="ruleForm.p_phone.phone1" class="short"></el-input>
+          <el-form-item label="Phone" class="phone-fax">
+            <el-input v-model="ruleForm.p_phone.phone1" class="short"></el-input>
             <i>-</i>
-            <el-input v-model.number="ruleForm.p_phone.phone2" class="short"></el-input>
+            <el-input v-model="ruleForm.p_phone.phone2" class="short"></el-input>
             <i>-</i>
-            <el-input v-model.number="ruleForm.p_phone.phone3" class="long"></el-input>
+            <el-input v-model="ruleForm.p_phone.phone3" class="long"></el-input>
             <i>-</i>
-            <el-input v-model.number="ruleForm.p_phone.phone4" class="short"></el-input>
+            <el-input v-model="ruleForm.p_phone.phone4" class="short"></el-input>
           </el-form-item>
-          <el-form-item label="Fax" prop="fax" class="phone-fax">
+          <el-form-item label="Fax" class="phone-fax">
             <el-input v-model="ruleForm.p_fax.fax1" class="short"></el-input>
             <i>-</i>
             <el-input v-model="ruleForm.p_fax.fax2" class="short"></el-input>
@@ -101,7 +101,7 @@
           </el-form-item>
         </el-form>
         <div class="button-box">
-          <button class="return" @click="returnUserCenter">Return</button>
+          <button class="return" @click="backToUserCenter">Return</button>
           <button v-show="isInfo" @click="subUserInfo">Confirm</button>
           <button v-show="isNotInfo" @click="resetForm">Save</button>
           <button v-show="isNotInfo" @click="subUserInfo">Submit</button>
@@ -114,13 +114,14 @@
 export default {
   data() {
     return {
-      email: "", //用户邮箱
       head: this.$route.matched[this.$route.matched.length - 1].meta.title, //头部标题
       note: "",
       isInfo: false, //是否显示confirm按钮
       isNotInfo: true, //是否显示save，submit按钮
       ruleForm: {
         //表单绑定数据
+        p_id:"",
+        p_email: "",
         p_first_name: "",
         p_middle_name: "",
         p_last_name: "",
@@ -170,27 +171,24 @@ export default {
         p_address: [
           { required: true, message: "请输入address", trigger: "blur" }
         ],
-        p_phone: [
-          { required: true, massage: "必填项" },
-          { type: "number", massage: "必须为数字" }
-        ],
+        p_phone: [],
         p_fax: []
       }
     };
   },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          alert("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
+    resetForm() {
+      for(var item in this.ruleForm){
+        this.ruleForm[item]=''
+      }
     },
-    resetForm() {},
+    //提交表单
     subUserInfo() {
+      var phone=this.ruleForm.p_phone
+      var fax=this.ruleForm.p_fax
+      this.ruleForm.p_phone=phone.phone1+'-'+phone.phone2+'-'+phone.phone3+'-'+phone.phone4
+      this.ruleForm.p_fax=fax.fax1+'-'+fax.fax2+'-'+fax.fax3+'-'+fax.fax4
+      console.log(this.ruleForm)
       this.axios({
         method: "post",
         url: "/api",
@@ -198,18 +196,24 @@ export default {
           act: "change_user",
           ...this.ruleForm
         })
-      });
+      }).then(res=>{
+        console.log(res)
+        if(res.status===200){
+          this.$message.success(res.data.result.msg)
+        }
+      })
     },
     //返回个人中心
-    returnUserCenter() {
+    backToUserCenter() {
       this.$router.push({
         path: this.$route.matched[this.$route.matched.length - 2].name
       });
     }
   },
   created() {
-    if (sessionStorage.userEmail) {
-      this.email = sessionStorage.userEmail;
+    if (sessionStorage.userEmail && sessionStorage.userId) {
+      this.ruleForm.p_email = sessionStorage.userEmail;
+      this.ruleForm.p_id =sessionStorage.userId
     }
     this.axios({
       method: "post",

@@ -34,7 +34,6 @@ export default new Router({
       },
       children: [{
         path: '/',
-        name: 'userCenter',
         component: () =>
           import('./views/UserCenterDefult.vue')
       },
@@ -45,6 +44,24 @@ export default new Router({
           import('./views/UserInfo.vue'),
         meta: {
           title: 'Personal Information'
+        }
+      },
+      {
+        path:'/summary',
+        name:'summary?id=8',
+        component: ()=>
+        import('./views/Summary.vue'),
+        meta:{
+          title:"Summary"
+        }
+      },
+      {
+        path:'/abstractSubmission',
+        name:'abstractSubmission',
+        component: ()=>
+        import('./views/AbstractSubmission.vue'),
+        meta:{
+          title:"Abstract Submission"
         }
       }
       ]

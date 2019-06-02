@@ -11,6 +11,7 @@ import '@/filters'
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios)
 Vue.use(ElementUI)
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 
 Vue.prototype.params=function(parameter){
   var obj={

@@ -38,7 +38,7 @@
       <div class="right">
         <router-link to="/login" class="login">Login</router-link>
         <router-link to="/" class="abstract">Abstract/Paper Submission</router-link>
-        <router-link to="/" class="online">Online Registration</router-link>
+        <router-link to="/summary?id=9" class="online">Online Registration</router-link>
         <div class="card venue">
           <div class="title">
             <i class="icon"></i>
