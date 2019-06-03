@@ -32,6 +32,13 @@ export default new Router({
       meta: {
         title: 'User Center'
       },
+      beforeEnter:(to,from,next)=>{
+        if(sessionStorage.userId|| sessionStorage.userEmail){
+          next();
+        }else{
+          next({path:'/login'})
+        }
+      },
       children: [{
         path: '/',
         component: () =>
@@ -63,7 +70,25 @@ export default new Router({
         meta:{
           title:"Abstract Submission"
         }
-      }
+      },
+      {
+        path:'/modifypassword',
+        name:'modifypassword',
+        component: ()=>
+        import('./views/ModifyPassword.vue'),
+        meta:{
+          title:'Modify Password'
+        }
+      },
+      {
+        path:'/fullpaper',
+        name:'fullpaper',
+        component: ()=>
+        import('./views/FullPaper.vue'),
+        meta:{
+          title:'Full Paper Submission'
+        }
+      },
       ]
     },
   ]

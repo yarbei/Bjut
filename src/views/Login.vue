@@ -35,9 +35,8 @@
           label-width="80px"
           :model="formPass"
           :rules="rules"
-          ref="ruleForm"
         >
-          <el-form-item label="Email Address" prop="emailAddress">
+          <el-form-item label="Email Address">
             <el-input placeholder="Email Address" v-model="formPass.email">
               <i slot="prefix" class="el-input__icon el-icon-user"></i>
             </el-input>
@@ -59,19 +58,18 @@
           label-width="80px"
           :model="formRegister"
           :rules="rules"
-          ref="ruleForm"
         >
-          <el-form-item label="Email Address" prop="remailAddress">
+          <el-form-item label="Email Address">
             <el-input placeholder="Email Address" v-model="formRegister.email">
               <i slot="prefix" class="el-input__icon el-icon-user"></i>
             </el-input>
           </el-form-item>
-          <el-form-item label="Password" prop="pass">
+          <el-form-item label="Password">
             <el-input placeholder="Password" v-model="formRegister.pass" show-password>
               <i slot="prefix" class="el-input__icon el-icon-key"></i>
             </el-input>
           </el-form-item>
-          <el-form-item label="Confirm Password" prop="checkPass">
+          <el-form-item label="Confirm Password">
             <el-input placeholder="Confirm Password" v-model="formRegister.checkPass" show-password>
               <i slot="prefix" class="el-input__icon el-icon-key"></i>
             </el-input>
@@ -99,25 +97,25 @@
 <script>
 export default {
   data() {
-    var validatePass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入密码"));
-      } else {
-        if (this.ruleForm.checkPass !== "") {
-          this.$refs.ruleForm.validateField("checkPass");
-        }
-        callback();
-      }
-    };
-    var validatePass2 = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请再次输入密码"));
-      } else if (value !== this.ruleForm.pass) {
-        callback(new Error("两次输入密码不一致!"));
-      } else {
-        callback();
-      }
-    };
+    // var validatePass = (rule, value, callback) => {
+    //   if (value === "") {
+    //     callback(new Error("请输入密码"));
+    //   } else {
+    //     if (this.ruleForm.checkPass !== "") {
+    //       this.$refs.ruleForm.validateField("checkPass");
+    //     }
+    //     callback();
+    //   }
+    // };
+    // var validatePass2 = (rule, value, callback) => {
+    //   if (value === "") {
+    //     callback(new Error("请再次输入密码"));
+    //   } else if (value !== this.ruleForm.pass) {
+    //     callback(new Error("两次输入密码不一致!"));
+    //   } else {
+    //     callback();
+    //   }
+    // };
     return {
       isLogin: true, //登录表单是否显示
       isPass: false, //找回密码是否显示
@@ -129,53 +127,65 @@ export default {
         email: "",
         password: ""
       },
-      ruleForm: {
-        email: "",
-        password: "",
-        emailAddress: "",
-        newPassword: "",
-        remailAddress: "",
-        pass: "",
-        checkPass: ""
-      },
-      rules: {
-        //表单的验证规则
-        email: [
-          { required: true, message: "请输入Email", trigger: "blur" },
-          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
-        ],
-        password: [
-          { required: true, message: "请输入密码", trigger: "blur" },
-          { min: 6, message: "密码最少6个字符", trigger: "blur" }
-        ],
-        emailAddress: [
-          { required: true, message: "请输入Email", trigger: "blur" },
-          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
-        ],
-        newPassword: [
-          { required: true, message: "请输入密码", trigger: "blur" },
-          { min: 6, message: "最少6个字符", trigger: "blur" }
-        ],
-        remailAddress: [
-          { required: true, message: "请输入Email", trigger: "blur" },
-          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
-
-        ],
-        pass: [{ required:true,validator: validatePass, trigger: "blur" }],
-        checkPass: [{ required:true,validator: validatePass2, trigger: "blur" }]
-      },
       formPass: {
         //找回密码表单绑定的数据
         email: "",
         password: ""
       },
-
       formRegister: {
         //注册表单绑定的数据
         email: "",
         pass: "",
         checkPass: ""
-      }
+      },
+      ruleForm: {
+        email: "",
+        password: "",
+        // emailAddress: "",
+        // newPassword: "",
+        // remailAddress: "",
+        // pass: "",
+        // checkPass: ""
+      },
+      rules: {
+        //表单的验证规则
+        email: [
+          { required: true, message: "请输入Email", trigger: "blur" },
+          {
+            type: "email",
+            message: "请输入正确的邮箱地址",
+            trigger: ["blur", "change"]
+          }
+        ],
+        password: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          { min: 6, message: "密码最少6个字符", trigger: "blur" }
+        ],
+        // emailAddress: [
+        //   { required: true, message: "请输入Email", trigger: "blur" },
+        //   {
+        //     type: "email",
+        //     message: "请输入正确的邮箱地址",
+        //     trigger: ["blur", "change"]
+        //   }
+        // ],
+        // newPassword: [
+        //   { required: true, message: "请输入密码", trigger: "blur" },
+        //   { min: 6, message: "最少6个字符", trigger: "blur" }
+        // ],
+        // remailAddress: [
+        //   { required: true, message: "请输入Email", trigger: "blur" },
+        //   {
+        //     type: "email",
+        //     message: "请输入正确的邮箱地址",
+        //     trigger: ["blur", "change"]
+        //   }
+        // ],
+        // pass: [{ required: true, validator: validatePass, trigger: "blur" }],
+        // checkPass: [
+        //   { required: true, validator: validatePass2, trigger: "blur" }
+        // ]
+      },
     };
   },
   methods: {
@@ -190,13 +200,11 @@ export default {
           pwd: this.formLogin.password
         })
       }).then(res => {
-        console.log(res);
         if (res.data.code === 200) {
           this.$message.success(res.data.message);
           sessionStorage.userId = res.data.result.p_id;
-          console.log(res.data)
           sessionStorage.userEmail = this.formLogin.email;
-          this.$router.push({path:"userInfo?id=8"})
+          this.$router.push({ path: "userInfo?id=8" });
         } else {
           this.$message.error(res.data.message);
         }
@@ -215,17 +223,19 @@ export default {
         method: "post",
         url: "/api",
         params: this.params({
-          act: "",
-          email: this.formPass.email,
+          act: "change_password_act",
+          toemail: this.formPass.email,
           password: this.formPass.password
         })
-          .then(res => {
-            console.log(res);
-          })
-          .catch(err => {
-            console.log(err);
-          })
-      });
+      })
+        .then(res => {
+          if(res.data.code===200){
+            this.$message.success('修改成功！')
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     //点击找回密码窗口返回按钮
     forgotPassReturn() {
@@ -247,9 +257,9 @@ export default {
         method: "post",
         url: "/api",
         params: this.params({
-          act: "",
-          email: this.formRegister.email,
-          pass: this.formRegister.pass
+          act: "registers",
+          toemail: this.formRegister.email,
+          password: this.formRegister.pass
         })
       })
         .then(res => {

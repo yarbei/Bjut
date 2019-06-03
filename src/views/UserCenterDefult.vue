@@ -42,7 +42,7 @@
             <td colspan="3">You haven’t submitted a full-paper yet.</td>
           </tr>
         </table>
-        <button>Submit a new Full-Paper</button>
+        <button @click="toFullPaper">Submit a new Full-Paper</button>
       </div>
     </div>
     <div class="info-box">
@@ -61,7 +61,7 @@
             <td>Participate tour visit</td>
             <td>Yes/No</td>
           </tr>
-          </table>
+        </table>
         <button>Registration now</button>
       </div>
     </div>
@@ -72,18 +72,22 @@ export default {
   data() {
     return {
       head: this.$route.matched[this.$route.matched.length - 1].meta.title,
-      userInfo:{}
+      userInfo: {}
     };
   },
   methods: {
     //点击跳转修改个人信息页面
-  modifyUserInfo(){
-    this.$router.push({path:'/userInfo?id=8'})
-  },
-  //点击按钮跳转AbstractSubmission
-  toAbstractSubmission(){
-    this.$router.push({path:'/abstractSubmission?id=8'})
-  }
+    modifyUserInfo() {
+      this.$router.push({ path: "/userInfo?id=8" });
+    },
+    //点击按钮跳转AbstractSubmission
+    toAbstractSubmission() {
+      this.$router.push({ path: "/abstractSubmission?id=8" });
+    },
+    //点击按钮跳转FullPaper
+    toFullPaper() {
+      this.$router.push({ path: "/fullpaper?id=8" });
+    }
   },
   created() {
     this.axios({
@@ -96,12 +100,12 @@ export default {
     })
       .then(res => {
         console.log(res);
-        this.userInfo=res.data.result
+        this.userInfo = res.data.result;
       })
       .catch(err => {
         console.log(err);
       });
-  },
+  }
 };
 </script>
 <style lang="less" scoped>
@@ -140,20 +144,22 @@ export default {
       color: #444;
       line-height: 32px;
     }
-    table{
+    table {
       border: 1px solid #eaeaea;
       margin-top: 20px;
       width: 100%;
-      tr td{
+      tr td {
         height: 66px;
-        text-align:center;
+        text-align: center;
       }
-      tr td:nth-child(1),tr td:nth-child(3){
+      tr td:nth-child(1),
+      tr td:nth-child(3) {
         width: 198px;
       }
     }
-    .table1,.table2{
-      tr:first-child td{
+    .table1,
+    .table2 {
+      tr:first-child td {
         font-weight: 700;
       }
     }

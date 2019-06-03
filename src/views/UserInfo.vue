@@ -199,7 +199,7 @@ export default {
       }).then(res=>{
         console.log(res)
         if(res.status===200){
-          this.$message.success(res.data.result.msg)
+          this.$message(res.data.message)
         }
       })
     },
@@ -240,9 +240,15 @@ export default {
         this.ruleForm.p_city = data.p_city;
         this.ruleForm.p_zip = data.p_zip;
         this.ruleForm.p_address = data.p_address;
-        this.ruleForm.p_phone = data.p_phone;
-        this.ruleForm.P_fax = data.P_fax;
-        if (this.ruleForm.p_first_name === "") {
+        this.ruleForm.p_phone.phone1=data.phone[0];
+        this.ruleForm.p_phone.phone2=data.phone[1];
+        this.ruleForm.p_phone.phone3=data.phone[2];
+        this.ruleForm.p_phone.phone4=data.phone[3];
+        // this.ruleForm.P_fax.fax1=data.fax[0];
+        // this.ruleForm.p_fax.fax2=data.fax[1];
+        // this.ruleForm.p_fax.fax3=data.fax[2];
+        // this.ruleForm.p_fax.fax4=data.fax[3];
+        if (data.p_first_name === "") {
           //判断返回数据是否有p_first_name字段选择显示按钮以及通知消息内容
           this.isInfo = false;
           this.isNotInfo = true;

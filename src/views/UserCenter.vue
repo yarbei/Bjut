@@ -3,15 +3,15 @@
     <div class="user-info-menu" v-show="userInfo">
       <div>
         <img src="../assets/img/user.png" alt>
-        <span>{{userEmail}}</span>
+        <span @click="toUserCenter">{{userEmail}}</span>
       </div>
       <div>
         <img src="../assets/img/pass.png" alt>
-        <span>Modify Password</span>
+        <span @click="modifyPassword">Modify Password</span>
       </div>
       <div>
         <img src="../assets/img/loginout.png" alt>
-        <span>Log out</span>
+        <span @click="logout">Log out</span>
       </div>
     </div>
     <img class="banner" src="../assets/img/banner.png" alt>
@@ -29,6 +29,19 @@ export default {
       userInfo: false, //控制页面上方蓝色菜单是否显示
       userEmail: "", //用户邮箱
     };
+  },
+  methods:{
+    modifyPassword(){
+      this.$router.push({path:'/modifypassword'})
+    },
+    toUserCenter(){
+      this.$router.push({path:'/userinfo'})
+    },
+    logout(){
+      sessionStorage.userId='';
+      sessionStorage.userEmail='',
+      this.$router.push({path:'/login'})
+    }
   },
   created() {
     if(sessionStorage.userEmail){
