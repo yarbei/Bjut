@@ -83,7 +83,7 @@ export default {
   data() {
     return {
       head: this.$route.matched[this.$route.matched.length - 1].meta.title,
-      filed: "api/",
+      filed: "/gaojian/index.php",
       act: this.params({
         act: "upload_file"
       }),

@@ -5,7 +5,7 @@
       <div class="article">
         <h1 class="title">{{article.title}}</h1>
         <div class="content">
-          {{article.content}}
+          <div v-html="article.content"></div>
           <div class="committee" v-show="committee">
             <div class="table" v-for="item in committeeList" :key="item.c_id">
               <h1>{{item.c_name}}</h1>
@@ -33,7 +33,7 @@
               <br>• Corresponding author will receive all correspondence concerning the submission and is responsible for informing the other authors of the status of the submission.
               <br>
             </p>
-            <button class="el-icon-upload2" @click="toAbstractSubmission">Please upload Abstract</button>
+            <button class="el-icon-upload2" @click="toAbstractSubmission">&nbsp;&nbsp;Please upload Abstract</button>
             <h2>Full Paper</h2>
             <p>
               • Only original and unpublished works are invited.
@@ -42,7 +42,7 @@
               <br>• The symposium will only call for Oral presentation.
               <br>• Corresponding author will receive all correspondence concerning the submission and is responsible for informing the other authors of the status of the submission.
             </p>
-            <button class="el-icon-upload2" @click="toFullPaper">Please upload Full-Paper</button>
+            <button class="el-icon-upload2" @click="toFullPaper">&nbsp;&nbsp;Please upload Full-Paper</button>
           </div>
         </div>
       </div>
@@ -79,7 +79,7 @@ export default {
     }
     if (id == 13) {
       this.axios({
-        url: "/api",
+        url: "/gaojian/index.php",
         method: "post",
         params: this.params({
           act: "committee"
@@ -96,7 +96,7 @@ export default {
     }
     this.axios({
       method: "post",
-      url: "/api",
+      url: "/gaojian/index.php",
       params: this.params({
         act: "article",
         id: id
@@ -146,7 +146,7 @@ img.banner {
       margin-top: 30px;
       .submission {
         width: 100%;
-        h1 {
+        h1,h2 {
           font-family: Arial-BoldMT;
           font-size: 26px;
           font-weight: 700;

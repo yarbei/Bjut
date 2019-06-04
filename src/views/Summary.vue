@@ -124,7 +124,7 @@ export default {
   created() {
     this.axios({
       method: "post",
-      url: "/api",
+      url: "/gaojian/index.php",
       params: this.params({
         act: "",
       })

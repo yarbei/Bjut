@@ -23,9 +23,10 @@ export default {
     Navigation
   },
   created() {
+    // this.$router.push({ path: "/" });
     this.axios({
       method: "get",
-      url: "/api",
+      url: "/gaojian/index.php",
       params: this.params({
         act: "left_navigation"
       })

@@ -43,7 +43,7 @@ export default {
     },
     save(){
         this.axios({
-            url:'/api',
+            url:'/gaojian/index.php',
             method:'post',
             params:this.params({
                 act:'change_pwd',

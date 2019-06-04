@@ -191,7 +191,7 @@ export default {
       console.log(this.ruleForm)
       this.axios({
         method: "post",
-        url: "/api",
+        url: "/gaojian/index.php",
         params: this.params({
           act: "change_user",
           ...this.ruleForm
@@ -217,7 +217,7 @@ export default {
     }
     this.axios({
       method: "post",
-      url: "/api",
+      url: "/gaojian/index.php",
       params: this.params({
         act: "personnel_info",
         p_id: sessionStorage.userId

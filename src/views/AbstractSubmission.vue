@@ -8,16 +8,15 @@
           class="note"
         >Choose the proper topic for this abstract from the "Topic" below. It is extremely important that you properly categorize your abstract so that it will go to the appropriate review group.</div>
         <el-form ref="form" :model="form" label-width="170px">
-          <el-form-item label="Paper Title:">
+          <el-form-item label="Paper Title:" required>
             <el-input v-model="form.paper_title"></el-input>
           </el-form-item>
-          <el-form-item label="Topic">
-            <el-select v-model="form.topic" placeholder="请选择活动区域">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+          <el-form-item label="Topic" required>
+            <el-select v-model="form.topic" placeholder>
+              <el-option v-for="item in topic" :key="item.id" :value="item.title"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="Abstract:">
+          <el-form-item label="Abstract:" required>
             <el-input type="textarea" v-model="form.abstract"></el-input>
           </el-form-item>
           <el-form-item label="Remarks:">
@@ -26,7 +25,7 @@
         </el-form>
         <div class="button-box">
           <button class="return" @click="backToUserCenter">Return</button>
-          <button @click="saveAndContinue1">Save and Continue</button>
+          <button @click="saveAndContinue('form')">Save and Continue</button>
         </div>
       </div>
       <div class="body body2" v-show="body2">
@@ -44,8 +43,7 @@
           <el-upload
             class="upload-demo"
             :action="filed"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
+            :on-success="uploadSuccess"
             :before-remove="beforeRemove"
             :limit="1"
             :on-exceed="handleExceed"
@@ -67,25 +65,25 @@
           class="note"
         >Please select if this is the corresponding author, Only one Corresponding Author is required.</div>
         <el-form ref="form" :model="form" label-width="150px">
-          <el-form-item label="First Name">
-            <el-input v-model="form.name"></el-input>
+          <el-form-item label="First Name" required>
+            <el-input v-model="form.first_name"></el-input>
           </el-form-item>
           <el-form-item label="Middle Name">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="form.middle_name"></el-input>
           </el-form-item>
-          <el-form-item label="Last Name">
-            <el-input v-model="form.name"></el-input>
+          <el-form-item label="Last Name" required>
+            <el-input v-model="form.last_name"></el-input>
           </el-form-item>
-          <el-form-item label="Country/Region">
-            <el-input v-model="form.name"></el-input>
+          <el-form-item label="Country/Region" required>
+            <el-input v-model="form.author_country"></el-input>
           </el-form-item>
-          <el-form-item label="Affiliation">
-            <el-input v-model="form.name"></el-input>
+          <el-form-item label="Affiliation" required>
+            <el-input v-model="form.author_affiliation"></el-input>
           </el-form-item>
         </el-form>
-        <button>Save and Continue</button>
+        <button @click="addAuthor">Save and Continue</button>
         <div class="author-list">Author List</div>
-        <table border="1">
+        <!-- <table border="1">
           <tr>
             <td>Name</td>
             <td>Country/Region</td>
@@ -94,14 +92,12 @@
             <td>Order</td>
             <td>Manage</td>
           </tr>
-          <tr>
-            <td>Hu</td>
-            <td>Andorra</td>
-            <td>TGF</td>
+          <tr v-for="item in author_list" :key="item.id">
+            <td>{{item.author_name}}</td>
+            <td>{{item.author_country}}</td>
+            <td>{{item.author_affiliation}}</td>
             <td>
-              <label for>
-                <input type="radio">Yes
-              </label>
+              <el-checkbox v-model="item.author_id" @change="checkChange">Yes</el-checkbox>
             </td>
             <td>
               <i class="el-icon-top"></i>
@@ -111,7 +107,21 @@
               <i class="el-icon-delete"></i>Delete
             </td>
           </tr>
-        </table>
+        </table>-->
+        <el-table
+          ref="authorTable"
+          :data="author_list"
+          tooltip-effect="dark"
+          style="width: 100%"
+          @selection-change="handleSelectionChange"
+        >
+          <el-table-column prop="author_name" label="Name"></el-table-column>
+          <el-table-column prop="author_country" label="Country/Region"></el-table-column>
+          <el-table-column prop="author_affiliation" label="Affiliation"></el-table-column>
+          <el-table-column label="Corresponding" type="selection"></el-table-column>
+          <el-table-column label="Order"></el-table-column>
+          <el-table-column label="Manage"></el-table-column>
+        </el-table>
         <div class="button-box">
           <button class="return" @click="returnStep2">Return</button>
           <button @click="saveAndContinue3">Save and Continue</button>
@@ -190,7 +200,7 @@ export default {
   data() {
     return {
       head: this.$route.matched[this.$route.matched.length - 1].meta.title,
-      filed: "api/",
+      filed: "/gaojian/index.php",
       act: this.params({
         act: "upload_file"
       }),
@@ -198,30 +208,66 @@ export default {
         paper_title: "",
         topic: "",
         abstract: "",
-        remarks: ""
+        remarks: "",
+        file: "",
+        first_name: "",
+        middle_name: "",
+        last_name: "",
+        author_country: "",
+        author_affiliation: ""
       },
+      author_list: [],
+      topic: [],
       body1: true,
       body2: false,
       body3: false,
       body4: false,
       body5: false,
-      fileList: []
+      fileList: [],
+      multipleSelection: []
     };
   },
   methods: {
+    toggleSelection(rows) {
+      if (rows) {
+        rows.forEach(row => {
+          this.$refs.multipleTable.toggleRowSelection(row);
+        });
+      } else {
+        this.$refs.multipleTable.clearSelection();
+      }
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
     //返回个人中心
     backToUserCenter() {
       this.$router.push({
         path: this.$route.matched[this.$route.matched.length - 2].name
       });
     },
-    //保存并继续
-    saveAndContinue1() {
-      this.body1 = false;
-      this.body2 = true;
-      this.body3 = false;
-      this.body4 = false;
-      this.body5 = false;
+    //保存步骤1并继续
+    saveAndContinue() {
+      if (this.form.paper_title) {
+        if (this.form.topic) {
+          if (this.form.abstract) {
+            this.body1 = false;
+            this.body2 = true;
+            this.body3 = false;
+            this.body4 = false;
+            this.body5 = false;
+          } else {
+            this.$message.warning("abstract必选！");
+            return false;
+          }
+        } else {
+          this.$message.warning("topic必选！");
+          return false;
+        }
+      } else {
+        this.$message.warning("paper_title必填！");
+        return false;
+      }
     },
     //步骤2返回步骤1
     returnStep1() {
@@ -233,11 +279,31 @@ export default {
     },
     //步骤2保存并跳转到步骤3
     saveAndContinue2() {
-      this.body1 = false;
-      this.body2 = false;
-      this.body3 = true;
-      this.body4 = false;
-      this.body5 = false;
+      if (this.form.file) {
+        this.body1 = false;
+        this.body2 = false;
+        this.body3 = true;
+        this.body4 = false;
+        this.body5 = false;
+        this.axios({
+          url: "/gaojian/index.php",
+          method: "post",
+          params: this.params({
+            act: "author_list",
+            p_id: sessionStorage.userId
+          })
+        })
+          .then(res => {
+            this.author_list = res.data.result;
+            console.log(this.author_list);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        this.$message.warning("文件必传！");
+        return false;
+      }
     },
     //步骤3返回步骤2
     returnStep2() {
@@ -247,6 +313,45 @@ export default {
       this.body4 = false;
       this.body5 = false;
     },
+    //添加作者
+    addAuthor() {
+      this.form.author_name =
+        this.form.first_name + this.form.middle_name + this.form.last_name;
+      if (this.form.author_name) {
+        if (this.form.author_country) {
+          if (this.form.author_affiliation) {
+            this.axios({
+              url: "/gaojian/index.php",
+              method: "post",
+              params: this.params({
+                act: "author_uploud",
+                author_name: this.form.author_name,
+                author_country: this.form.author_country,
+                author_affiliation: this.form.author_affiliation,
+                p_id: sessionStorage.userId
+              })
+            })
+              .then(res => {
+                console.log(res);
+              })
+              .catch(err => {
+                console.log(err);
+              });
+          } else {
+            this.$message.warning("请输入affliation");
+            return false;
+          }
+        } else {
+          this.$message.warning("请输入country");
+          return false;
+        }
+      } else {
+        this.$message.warning("请输入name");
+        return false;
+      }
+    },
+    //选中作者的回调函数
+    checkChange() {},
     //步骤3保存并跳转到步骤4
     saveAndContinue3() {
       this.body1 = false;
@@ -271,13 +376,10 @@ export default {
       this.body4 = false;
       this.body5 = true;
     },
-    
-    //上传文件的钩子函数
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    handlePreview(file) {
-      console.log(file);
+
+    //上传文件成功的钩子函数
+    uploadSuccess(res) {
+      this.form.file = res.result;
     },
     handleExceed(files, fileList) {
       this.$message.warning(
@@ -289,6 +391,21 @@ export default {
     beforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`);
     }
+  },
+  created() {
+    this.axios({
+      url: "/gaojian/index.php",
+      method: "post",
+      params: this.params({
+        act: "tags"
+      })
+    })
+      .then(res => {
+        this.topic = res.data.result;
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 };
 </script>
@@ -381,6 +498,7 @@ export default {
       }
       button.return {
         background: #eaeaea;
+        color: #444;
       }
     }
     .upload {

@@ -2,7 +2,7 @@
   <div>
     <el-carousel trigger="click" height="600px" arrow="never">
       <el-carousel-item v-for="item in data.Wheel_planting" :key="item.id">
-        <img :src="item.img" :alt="item.des">
+        <img :src="item.img" alt>
       </el-carousel-item>
     </el-carousel>
     <div class="content">
@@ -14,8 +14,10 @@
           </div>
           <ul>
             <li v-for="item in data.Important" :key="item.id">
-              <router-link to="/" class="hidden1">{{item.title}}</router-link>
-              <span class="time">{{item.time}}</span>
+              <router-link :to="'/article?id='+item.id" class="hidden1">
+                <span>{{item.title}}</span>
+                <span class="time">{{item.time}}</span>
+              </router-link>
             </li>
           </ul>
         </div>
@@ -26,18 +28,20 @@
           </div>
           <ul>
             <li v-for="item in data.News" :key="item.id">
-              <div class="head">
-                <router-link to="/">{{item.title}}</router-link>
-                <span class="time">{{item.time}}</span>
-              </div>
-              <div class="des">{{item.des}}</div>
+              <router-link :to="'/article?id='+item.id">
+                <div class="head">
+                  <span>{{item.title}}</span>
+                  <span class="time">{{item.time}}</span>
+                </div>
+                <div class="des">{{item.des}}</div>
+              </router-link>
             </li>
           </ul>
         </div>
       </div>
       <div class="right">
-        <router-link to="/login" class="login">Login</router-link>
-        <router-link to="/" class="abstract">Abstract/Paper Submission</router-link>
+        <div @click="toLoginOrUserCenter" class="login">{{login}}</div>
+        <router-link to="/article?id=9" class="abstract">Abstract/Paper Submission</router-link>
         <router-link to="/summary?id=9" class="online">Online Registration</router-link>
         <div class="card venue">
           <div class="title">
@@ -72,26 +76,40 @@ export default {
   name: "home",
   data() {
     return {
+      login: "Login",
       data: {
         About_us: {
-          gsdz: null
+          gsdz: ""
         },
-        Important: null,
-        News: null,
-        Wheel_planting: null
+        Important: "",
+        News: "",
+        Wheel_planting: ""
       }
     };
   },
+  methods:{
+    toLoginOrUserCenter(){
+      if(sessionStorage.userId && sessionStorage.userEmail){
+        this.$router.push({path:'/userCenter?id=9'})
+      }else{
+        this.$router.push({path:'/login'})
+      }
+    }
+  },
   created() {
+    if (sessionStorage.userId || sessionStorage.userEmail) {
+      this.login = sessionStorage.userEmail;
+    }
     this.axios({
       method: "post",
-      url: "/api",
+      url: "/gaojian/index.php",
       params: this.params({
-        act:'index'
+        act: "index"
       })
     })
       .then(res => {
         this.data = res.data.result;
+        console.log(this.data);
       })
       .catch(err => {
         console.log(err);
@@ -167,21 +185,24 @@ export default {
     flex-direction: column;
     li {
       width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 30px;
       /deep/ a {
-        max-width: 350px;
-        font-family: ArialMT;
-        font-size: 18px;
-        color: #000;
-      }
-      .time {
-        font-size: 16px;
-        font-family: Arial-BoldMT;
-        color: #727272;
-        opacity: 0.8;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 30px;
+        span {
+          max-width: 350px;
+          font-family: ArialMT;
+          font-size: 18px;
+          color: #000;
+        }
+        .time {
+          font-size: 16px;
+          font-family: Arial-BoldMT;
+          color: #727272;
+          opacity: 0.8;
+        }
       }
     }
   }
@@ -200,7 +221,7 @@ export default {
     .news {
       height: 400px;
       margin-top: 30px;
-      ul li {
+      ul li /deep/ a {
         flex-direction: column;
         .head {
           width: 100%;
@@ -232,7 +253,7 @@ export default {
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
-    /deep/ a {
+    /deep/ a ,.login{
       width: 100%;
       height: 58px;
       display: flex;
@@ -245,6 +266,7 @@ export default {
     }
     .login {
       background: #2aace8;
+      cursor: pointer;
     }
     .abstract,
     .online {

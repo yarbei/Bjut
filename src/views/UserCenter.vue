@@ -32,10 +32,10 @@ export default {
   },
   methods:{
     modifyPassword(){
-      this.$router.push({path:'/modifypassword'})
+      this.$router.push({path:'/modifypassword?id=9'})
     },
     toUserCenter(){
-      this.$router.push({path:'/userinfo'})
+      this.$router.push({path:'/userinfo?id=9'})
     },
     logout(){
       sessionStorage.userId='';
@@ -48,6 +48,18 @@ export default {
       this.userEmail=sessionStorage.userEmail;
       this.userInfo=true;
     }
+    this.axios({
+      url:'/gaojian/index.php',
+      method:'',
+      params:this.params({
+        act:'list_full',
+        p_id:sessionStorage.userId
+      })
+    }).then(res=>{
+      console.log(res)
+    }).catch(err=>{
+      console.log(err)
+    })
   },
   components: {
     crumbs

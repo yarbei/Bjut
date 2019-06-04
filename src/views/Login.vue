@@ -193,7 +193,7 @@ export default {
     login() {
       this.axios({
         method: "post",
-        url: "/api",
+        url: "/gaojian/index.php",
         params: this.params({
           act: "login_name",
           email: this.formLogin.email,
@@ -221,7 +221,7 @@ export default {
     sendEmail() {
       this.axios({
         method: "post",
-        url: "/api",
+        url: "/gaojian/index.php",
         params: this.params({
           act: "change_password_act",
           toemail: this.formPass.email,
@@ -230,7 +230,7 @@ export default {
       })
         .then(res => {
           if(res.data.code===200){
-            this.$message.success('修改成功！')
+            this.$message.success(res.data.result.msg)
           }
         })
         .catch(err => {
@@ -255,7 +255,7 @@ export default {
     confirm() {
       this.axios({
         method: "post",
-        url: "/api",
+        url: "/gaojian/index.php",
         params: this.params({
           act: "registers",
           toemail: this.formRegister.email,
