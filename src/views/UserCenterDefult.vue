@@ -171,6 +171,9 @@ export default {
       tr td {
         height: 66px;
         text-align: center;
+        a{
+          color: #2aace8;
+        }
       }
       tr td:nth-child(1),
       tr td:nth-child(3) {

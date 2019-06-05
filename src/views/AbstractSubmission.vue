@@ -153,7 +153,7 @@
           <tr>
             <td>Abstract File</td>
             <td>
-              <a :href="form.file" class="download el-icon-download">Download</a>
+              <a :download="form.file" :href="form.file" class="download el-icon-download">Download</a>
             </td>
           </tr>
         </table>
@@ -172,7 +172,7 @@
       <div class="body body5" v-show="body5">
         <h1>
           The abstract was submitted successfully, ID as:
-      <span>{{abstract_id}}</span>
+          <span>{{abstract_id}}</span>
         </h1>
         <p>
           A confirmation email with important information concerning your full-paper has been sent to your email address as following:
@@ -217,7 +217,7 @@ export default {
       body5: false,
       fileList: [],
       select_author: [],
-      abstract_id:""
+      abstract_id: ""
     };
   },
   methods: {
@@ -323,6 +323,11 @@ export default {
                       author_info.last_name,
                     ...author_info
                   });
+                  this.form.first_name = "";
+                  this.form.middle_name = "";
+                  this.form.last_name = "";
+                  this.form.author_country = "";
+                  this.form.author_affiliation = "";
                 } else {
                   console.log(res);
                   this.$message.warning(res.data.message);

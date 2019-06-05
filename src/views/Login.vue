@@ -17,7 +17,7 @@
               <i slot="prefix" class="el-input__icon el-icon-user"></i>
             </el-input>
           </el-form-item>
-          <el-form-item label="Password" prop="password">
+          <el-form-item label="Password" prop="pass">
             <el-input placeholder="password" v-model="formLogin.password" show-password>
               <i slot="prefix" class="el-input__icon el-icon-key"></i>
             </el-input>
@@ -35,13 +35,14 @@
           label-width="80px"
           :model="formPass"
           :rules="rules"
+          ref="ruleForm"
         >
-          <el-form-item label="Email Address">
+          <el-form-item label="Email Address" prop="email">
             <el-input placeholder="Email Address" v-model="formPass.email">
               <i slot="prefix" class="el-input__icon el-icon-user"></i>
             </el-input>
           </el-form-item>
-          <el-form-item label="New Password" prop="newPassword">
+          <el-form-item label="New Password" prop="pass">
             <el-input placeholder="New Password" v-model="formPass.password" show-password>
               <i slot="prefix" class="el-input__icon el-icon-key"></i>
             </el-input>
@@ -59,17 +60,17 @@
           :model="formRegister"
           :rules="rules"
         >
-          <el-form-item label="Email Address">
+          <el-form-item label="Email Address" prop="email">
             <el-input placeholder="Email Address" v-model="formRegister.email">
               <i slot="prefix" class="el-input__icon el-icon-user"></i>
             </el-input>
           </el-form-item>
-          <el-form-item label="Password">
+          <el-form-item label="Password" prop="pass">
             <el-input placeholder="Password" v-model="formRegister.pass" show-password>
               <i slot="prefix" class="el-input__icon el-icon-key"></i>
             </el-input>
           </el-form-item>
-          <el-form-item label="Confirm Password">
+          <el-form-item label="Confirm Password" prop="pass">
             <el-input placeholder="Confirm Password" v-model="formRegister.checkPass" show-password>
               <i slot="prefix" class="el-input__icon el-icon-key"></i>
             </el-input>
@@ -95,28 +96,11 @@
   </div>
 </template>
 <script>
+import { setTimeout } from "timers";
 export default {
   data() {
-    // var validatePass = (rule, value, callback) => {
-    //   if (value === "") {
-    //     callback(new Error("请输入密码"));
-    //   } else {
-    //     if (this.ruleForm.checkPass !== "") {
-    //       this.$refs.ruleForm.validateField("checkPass");
-    //     }
-    //     callback();
-    //   }
-    // };
-    // var validatePass2 = (rule, value, callback) => {
-    //   if (value === "") {
-    //     callback(new Error("请再次输入密码"));
-    //   } else if (value !== this.ruleForm.pass) {
-    //     callback(new Error("两次输入密码不一致!"));
-    //   } else {
-    //     callback();
-    //   }
-    // };
     return {
+      isEmailCode: true,
       isLogin: true, //登录表单是否显示
       isPass: false, //找回密码是否显示
       isRegister: false,
@@ -140,12 +124,7 @@ export default {
       },
       ruleForm: {
         email: "",
-        password: "",
-        // emailAddress: "",
-        // newPassword: "",
-        // remailAddress: "",
-        // pass: "",
-        // checkPass: ""
+        pass: ""
       },
       rules: {
         //表单的验证规则
@@ -157,35 +136,11 @@ export default {
             trigger: ["blur", "change"]
           }
         ],
-        password: [
+        pass: [
           { required: true, message: "请输入密码", trigger: "blur" },
           { min: 6, message: "密码最少6个字符", trigger: "blur" }
-        ],
-        // emailAddress: [
-        //   { required: true, message: "请输入Email", trigger: "blur" },
-        //   {
-        //     type: "email",
-        //     message: "请输入正确的邮箱地址",
-        //     trigger: ["blur", "change"]
-        //   }
-        // ],
-        // newPassword: [
-        //   { required: true, message: "请输入密码", trigger: "blur" },
-        //   { min: 6, message: "最少6个字符", trigger: "blur" }
-        // ],
-        // remailAddress: [
-        //   { required: true, message: "请输入Email", trigger: "blur" },
-        //   {
-        //     type: "email",
-        //     message: "请输入正确的邮箱地址",
-        //     trigger: ["blur", "change"]
-        //   }
-        // ],
-        // pass: [{ required: true, validator: validatePass, trigger: "blur" }],
-        // checkPass: [
-        //   { required: true, validator: validatePass2, trigger: "blur" }
-        // ]
-      },
+        ]
+      }
     };
   },
   methods: {
@@ -229,8 +184,8 @@ export default {
         })
       })
         .then(res => {
-          if(res.data.code===200){
-            this.$message.success(res.data.result.msg)
+          if (res.data.code === 200) {
+            this.$message.success(res.data.result.msg);
           }
         })
         .catch(err => {
@@ -253,23 +208,35 @@ export default {
     },
     //注册窗口点击提交注册信息
     confirm() {
-      this.axios({
-        method: "post",
-        url: "/gaojian/index.php",
-        params: this.params({
-          act: "registers",
-          toemail: this.formRegister.email,
-          password: this.formRegister.pass
-        })
-      })
-        .then(res => {
-          console.log(res);
-          this.$message.success('验证邮件已发送，请注意查收！')
-          // this.$router.push({ path: "userInfo?id=8" });
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      if (this.formRegister.pass == this.formRegister.checkPass) {
+        if (this.isEmailCode) {
+          this.axios({
+            method: "post",
+            url: "/gaojian/index.php",
+            params: this.params({
+              act: "registers",
+              toemail: this.formRegister.email,
+              password: this.formRegister.pass
+            })
+          })
+            .then(res => {
+              console.log(res);
+              this.isEmailCode = false;
+              setTimeout(function() {
+                this.isEmailCode = true;
+              }, 1000);
+              this.$message.success("验证邮件已发送，请注意查收！");
+              // this.$router.push({ path: "userInfo?id=8" });
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        } else {
+          this.$message.warning("您注册太过频繁，请稍后再试");
+        }
+      } else {
+        this.$message.warning("两次密码不同！");
+      }
     },
     //注册窗口点击返回按钮
     RegisterReturn() {
