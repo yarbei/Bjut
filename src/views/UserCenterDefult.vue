@@ -3,9 +3,9 @@
     <div class="info-box">
       <div class="head">Personal information</div>
       <div class="body">
-        <p>Prof. Tong</p>
+        <p>{{userInfo.p_first_name}}</p>
         <p>Affiliation:{{userInfo.p_affiliation}}</p>
-        <p>Tel:18600996687</p>
+        <p>Tel:{{userInfo.p_phone}}</p>
         <p>Email:{{userInfo.p_email}}</p>
         <p>Add: {{userInfo.p_address}}</p>
         <button @click="modifyUserInfo">Modify</button>
@@ -20,10 +20,10 @@
             <td>Abstract Title</td>
             <td></td>
           </tr>
-          <tr>
-            <td>A0038</td>
-            <td>You haven’t submitted an abstract yet.</td>
-            <td>Download</td>
+          <tr v-for="item in ab_list" :key="item.number">
+            <td>{{item.number}}</td>
+            <td>{{item.paper_title}}</td>
+            <td><a :href="item.file">Download</a></td>
           </tr>
         </table>
         <button @click="toAbstractSubmission">Submit a new Abstract</button>
@@ -38,8 +38,10 @@
             <td>Paper Title</td>
             <td></td>
           </tr>
-          <tr>
-            <td colspan="3">You haven’t submitted a full-paper yet.</td>
+          <tr v-for="item in full_list" :key="item.number">
+            <td>{{item.number}}</td>
+            <td>{{item.paper_title}}</td>
+            <td><a :href="item.file">Download</a></td>
           </tr>
         </table>
         <button @click="toFullPaper">Submit a new Full-Paper</button>
@@ -72,7 +74,9 @@ export default {
   data() {
     return {
       head: this.$route.matched[this.$route.matched.length - 1].meta.title,
-      userInfo: {}
+      userInfo: {},
+      ab_list:[],
+      full_list:[]
     };
   },
   methods: {
@@ -90,6 +94,22 @@ export default {
     }
   },
   created() {
+    this.axios({
+      url: "/gaojian/index.php",
+      method: "post",
+      params: this.params({
+        act: "list_full",
+        p_id: sessionStorage.userId
+      })
+    })
+      .then(res => {
+        this.ab_list=res.data.result.Ab_LIST
+        this.full_list=res.data.result.FULL_LIST
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
     this.axios({
       method: "post",
       url: "/gaojian/index.php",

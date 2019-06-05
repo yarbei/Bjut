@@ -365,6 +365,7 @@ export default {
       }
       button.return {
         background: #eaeaea;
+        color: #444;
       }
     }
   }

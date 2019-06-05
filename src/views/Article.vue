@@ -5,7 +5,7 @@
       <div class="article">
         <h1 class="title">{{article.title}}</h1>
         <div class="content">
-          <div v-html="article.content"></div>
+          <div v-html="article.content" v-show="isArticle"></div>
           <div class="committee" v-show="committee">
             <div class="table" v-for="item in committeeList" :key="item.c_id">
               <h1>{{item.c_name}}</h1>
@@ -23,25 +23,9 @@
             </div>
           </div>
           <div class="submission" v-show="submission">
-            <h1>Abstract</h1>
-            <p>
-              • Only original and unpublished works are invited.
-              <br>• All abstracts must be submitted in English.
-              <br>• All abstracts must be submitted no later than May 31, 2019 via email to the secretariat
-              <span>isrerm2020@bjut.edu.cn.</span>
-              <br>• The symposium will only call for Oral presentation.
-              <br>• Corresponding author will receive all correspondence concerning the submission and is responsible for informing the other authors of the status of the submission.
-              <br>
-            </p>
+            <div v-html="article.content"></div>
             <button class="el-icon-upload2" @click="toAbstractSubmission">&nbsp;&nbsp;Please upload Abstract</button>
-            <h2>Full Paper</h2>
-            <p>
-              • Only original and unpublished works are invited.
-              <br>• All full-paper must be submitted in English.
-              <br>• All full-paper should be submitted no later than Aug. 31, 2019, via email to the secretariat isrerm2020@bjut.edu.cn.
-              <br>• The symposium will only call for Oral presentation.
-              <br>• Corresponding author will receive all correspondence concerning the submission and is responsible for informing the other authors of the status of the submission.
-            </p>
+            <div v-html="article.contents"></div>
             <button class="el-icon-upload2" @click="toFullPaper">&nbsp;&nbsp;Please upload Full-Paper</button>
           </div>
         </div>
@@ -56,11 +40,13 @@ export default {
       article: {
         img: "",
         title: "",
-        content: ""
+        content: "",
+        contents:""
       },
       id: null,
       committee: false,
       submission: false,
+      isArticle:true,
       committeeList: []
     };
   },
@@ -75,9 +61,11 @@ export default {
   created() {
     let id = this.$route.query.id;
     if (id == 9) {
+      this.isArticle=false
       this.submission = true;
     }
     if (id == 13) {
+      this.isArticle=false
       this.axios({
         url: "/gaojian/index.php",
         method: "post",
@@ -104,6 +92,7 @@ export default {
     })
       .then(res => {
         this.article = res.data.result;
+        console.log(res)
       })
       .catch(err => {
         console.log(err);

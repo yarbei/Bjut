@@ -204,7 +204,7 @@ export default {
           this.$message.success(res.data.message);
           sessionStorage.userId = res.data.result.p_id;
           sessionStorage.userEmail = this.formLogin.email;
-          this.$router.push({ path: "userInfo?id=8" });
+          this.$router.push({ path: "userCenter?id=8" });
         } else {
           this.$message.error(res.data.message);
         }
@@ -264,7 +264,8 @@ export default {
       })
         .then(res => {
           console.log(res);
-          this.$router.push({ path: "userInfo?id=8" });
+          this.$message.success('验证邮件已发送，请注意查收！')
+          // this.$router.push({ path: "userInfo?id=8" });
         })
         .catch(err => {
           console.log(err);

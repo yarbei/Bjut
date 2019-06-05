@@ -8,16 +8,10 @@
           class="note"
         >Choose the proper topic for this abstract from the "Topic" below. It is extremely important that you properly categorize your abstract so that it will go to the appropriate review group.</div>
         <el-form ref="form" :model="form" label-width="170px">
-          <el-form-item label="Paper Title:">
+          <el-form-item label="Paper Title:" required>
             <el-input v-model="form.paper_title"></el-input>
           </el-form-item>
-          <el-form-item label="Topic">
-            <el-select v-model="form.topic" placeholder="请选择活动区域">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="Abstract:">
+          <el-form-item label="Abstract:" required>
             <el-input type="textarea" v-model="form.abstract"></el-input>
           </el-form-item>
           <el-form-item label="Remarks:">
@@ -26,7 +20,7 @@
         </el-form>
         <div class="button-box">
           <button class="return" @click="backToUserCenter">Return</button>
-          <button @click="saveAndContinue1">Save and Continue</button>
+          <button @click="saveAndContinue('form')">Save and Continue</button>
         </div>
       </div>
       <div class="body body2" v-show="body2">
@@ -40,12 +34,13 @@
             <br>(3) All full-paper should be submitted no later than Aug. 31, 2019, via email to the secretariat isrerm2020@bjut.edu.cn.
             <br>(4) The symposium will only call for Oral presentation.
             <br>(5) Corresponding author will receive all correspondence concerning the submission and is responsible for informing the other authors of the status of the submission.
+            <br>
+            <a href class="el-icon-download">Abstract Template.doc</a>
           </p>
           <el-upload
             class="upload-demo"
             :action="filed"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
+            :on-success="uploadSuccess"
             :before-remove="beforeRemove"
             :limit="1"
             :on-exceed="handleExceed"
@@ -63,7 +58,7 @@
       <div class="body body3" v-show="body3">
         <h1>
           The full-paper was submitted successfully, ID as:
-          <span>A213510</span>
+          <span>{{full_id}}</span>
         </h1>
         <p>
           A confirmation email with important information concerning your full-paper has been sent to your email address as following:
@@ -89,14 +84,15 @@ export default {
       }),
       form: {
         paper_title: "",
-        topic: "",
         abstract: "",
-        remarks: ""
+        remarks: "",
+        file: ""
       },
       body1: true,
       body2: false,
       body3: false,
-      fileList: []
+      fileList: [],
+      full_id: ""
     };
   },
   methods: {
@@ -106,11 +102,21 @@ export default {
         path: this.$route.matched[this.$route.matched.length - 2].name
       });
     },
-    //保存并继续
-    saveAndContinue1() {
-      this.body1 = false;
-      this.body2 = true;
-      this.body3 = false;
+    //步骤1保存并继续
+    saveAndContinue() {
+      if (this.form.paper_title) {
+        if (this.form.abstract) {
+          this.body1 = false;
+          this.body2 = true;
+          this.body3 = false;
+        } else {
+          this.$message.warning("abstract必填！");
+          return false;
+        }
+      } else {
+        this.$message.warning("paper_title必填！");
+        return false;
+      }
     },
     //步骤2返回步骤1
     returnStep1() {
@@ -118,18 +124,47 @@ export default {
       this.body2 = false;
       this.body3 = false;
     },
-    //步骤2上传成功
+    //步骤2上传数据
     saveAndContinue2() {
-      this.body1 = false;
-      this.body2 = false;
-      this.body3 = true;
+      if (this.form.file) {
+        this.axios({
+          url: "/gaojian/index.php",
+          method: "post",
+          params: this.params({
+            act: "file_uploud",
+            p_id: sessionStorage.userId,
+            paper_title: this.form.paper_title,
+            abstract: this.form.abstract,
+            remarks: this.form.remarks,
+            type: "1",
+            file: this.form.file
+          })
+        })
+          .then(res => {
+            if (res.data.code == 200) {
+              this.full_id = res.data.result.info.number;
+              this.body1 = false;
+              this.body2 = false;
+              this.body3 = true;
+            } else {
+              this.$message.warning("提交失败！");
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        this.$message.warning("文件必传！");
+      }
     },
     //上传文件的钩子函数
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    handlePreview(file) {
-      console.log(file);
+    uploadSuccess(res) {
+      if (res.code === 200) {
+        this.$message.success("上传成功！");
+        this.form.file = res.result;
+      } else {
+        this.$message.warning(res.message);
+      }
     },
     handleExceed(files, fileList) {
       this.$message.warning(
@@ -233,6 +268,7 @@ export default {
       }
       button.return {
         background: #eaeaea;
+        color: #444;
       }
     }
     .upload {

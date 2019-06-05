@@ -83,44 +83,37 @@
         </el-form>
         <button @click="addAuthor">Save and Continue</button>
         <div class="author-list">Author List</div>
-        <!-- <table border="1">
-          <tr>
-            <td>Name</td>
-            <td>Country/Region</td>
-            <td>Affiliation</td>
-            <td>Corresponding</td>
-            <td>Order</td>
-            <td>Manage</td>
-          </tr>
-          <tr v-for="item in author_list" :key="item.id">
-            <td>{{item.author_name}}</td>
-            <td>{{item.author_country}}</td>
-            <td>{{item.author_affiliation}}</td>
-            <td>
-              <el-checkbox v-model="item.author_id" @change="checkChange">Yes</el-checkbox>
-            </td>
-            <td>
-              <i class="el-icon-top"></i>
-              <i class="el-icon-bottom"></i>
-            </td>
-            <td>
-              <i class="el-icon-delete"></i>Delete
-            </td>
-          </tr>
-        </table>-->
         <el-table
           ref="authorTable"
           :data="author_list"
           tooltip-effect="dark"
           style="width: 100%"
+          border
+          align="center"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column prop="author_name" label="Name"></el-table-column>
-          <el-table-column prop="author_country" label="Country/Region"></el-table-column>
-          <el-table-column prop="author_affiliation" label="Affiliation"></el-table-column>
-          <el-table-column label="Corresponding" type="selection"></el-table-column>
-          <el-table-column label="Order"></el-table-column>
-          <el-table-column label="Manage"></el-table-column>
+          >
+          <el-table-column prop="author_name" label="Name" align="center"></el-table-column>
+          <el-table-column prop="author_country" label="Country/Region" align="center"></el-table-column>
+          <el-table-column prop="author_affiliation" label="Affiliation" align="center"></el-table-column>
+          <el-table-column type="selection" @select="selectAuthor(selection,row)" align="center"></el-table-column>
+          <el-table-column label="Order" align="center">
+            <template slot="header" slot-scope="scope">
+              <span>Order</span>
+            </template>
+            <template slot-scope="scope">
+              <i class="el-icon-top" @click="topAuthor(author_list, scope.$index)"></i>
+              <i class="el-icon-bottom" @click="bottomAuthor(author_list,scope.$index)"></i>
+            </template>
+          </el-table-column>
+          <el-table-column label="Manage" align="center">
+            <template slot="header" slot-scope="scope">
+              <span>Manage</span>
+            </template>
+            <template slot-scope="scope">
+              <i class="el-icon-delete" @click="deleteAuthor(scope.$index, scope.row)">Delete</i>
+            </template>
+          </el-table-column>
         </el-table>
         <div class="button-box">
           <button class="return" @click="returnStep2">Return</button>
@@ -130,39 +123,38 @@
       <div class="body body4" v-show="body4">
         <img src="../assets/img/step4.png" alt>
         <div class="author-list">Author List</div>
-        <table class="tabel1" border="1">
-          <tr>
-            <td>Order</td>
-            <td>Name</td>
-            <td>Affiliation</td>
-            <td>Country/Region</td>
-            <td>Corresponding</td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        </table>
+        <el-table
+          ref="authorTable"
+          :data="select_author"
+          tooltip-effect="dark"
+          style="width: 100%"
+          border
+          align="center"
+        >
+          <el-table-column prop="author_name" label="Order" align="center"></el-table-column>
+          <el-table-column prop="author_name" label="Name" align="center"></el-table-column>
+          <el-table-column prop="author_affiliation" label="Affiliation" align="center"></el-table-column>
+          <el-table-column prop="author_country" label="Country/Region" align="center"></el-table-column>
+        </el-table>
         <div class="abstract-info">Abstract Information</div>
         <table class="table2" border="1">
           <tr>
             <td>Abstract Title</td>
-            <td></td>
+            <td>{{form.paper_title}}</td>
           </tr>
           <tr>
             <td>Topic</td>
-            <td></td>
+            <td>{{form.topic}}</td>
           </tr>
           <tr>
             <td>Remarks</td>
-            <td></td>
+            <td>{{form.remarks}}</td>
           </tr>
           <tr>
             <td>Abstract File</td>
-            <td></td>
+            <td>
+              <a :href="form.file" class="download el-icon-download">Download</a>
+            </td>
           </tr>
         </table>
         <div class="note">
@@ -180,7 +172,7 @@
       <div class="body body5" v-show="body5">
         <h1>
           The abstract was submitted successfully, ID as:
-          <span>A213510</span>
+      <span>{{abstract_id}}</span>
         </h1>
         <p>
           A confirmation email with important information concerning your full-paper has been sent to your email address as following:
@@ -224,22 +216,11 @@ export default {
       body4: false,
       body5: false,
       fileList: [],
-      multipleSelection: []
+      select_author: [],
+      abstract_id:""
     };
   },
   methods: {
-    toggleSelection(rows) {
-      if (rows) {
-        rows.forEach(row => {
-          this.$refs.multipleTable.toggleRowSelection(row);
-        });
-      } else {
-        this.$refs.multipleTable.clearSelection();
-      }
-    },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-    },
     //返回个人中心
     backToUserCenter() {
       this.$router.push({
@@ -257,7 +238,7 @@ export default {
             this.body4 = false;
             this.body5 = false;
           } else {
-            this.$message.warning("abstract必选！");
+            this.$message.warning("abstract必填！");
             return false;
           }
         } else {
@@ -332,7 +313,20 @@ export default {
               })
             })
               .then(res => {
-                console.log(res);
+                if (res.data.code === 200) {
+                  this.$message.success(res.data.message);
+                  let author_info = res.data.result.info;
+                  this.author_list.push({
+                    author_name:
+                      author_info.first_name +
+                      author_info.middle_name +
+                      author_info.last_name,
+                    ...author_info
+                  });
+                } else {
+                  console.log(res);
+                  this.$message.warning(res.data.message);
+                }
               })
               .catch(err => {
                 console.log(err);
@@ -351,14 +345,81 @@ export default {
       }
     },
     //选中作者的回调函数
-    checkChange() {},
+    handleSelectionChange(val) {
+      this.select_author = val;
+      console.log(this.select_author);
+    },
+    //该作者向前排序
+    topAuthor(author_list, index) {
+      if (index != 0) {
+        author_list[index] = author_list.splice(
+          index - 1,
+          1,
+          author_list[index]
+        )[0];
+      } else {
+        author_list.push(author_list.shift());
+      }
+    },
+    //该作者向后排序
+    bottomAuthor(author_list, index) {
+      if (index != author_list.length - 1) {
+        author_list[index] = author_list.splice(
+          index + 1,
+          1,
+          author_list[index]
+        )[0];
+      } else {
+        author_list.unshift(author_list.splice(index, 1)[0]);
+      }
+    },
+    //删除该作者
+    deleteAuthor(index, row) {
+      this.axios({
+        url: "/gaojian/index.php",
+        method: "post",
+        params: this.params({
+          act: "del_author",
+          id: row.author_id
+        })
+      })
+        .then(res => {
+          if (res.data.code === 200) {
+            this.$message.success(res.data.message);
+            this.axios({
+              url: "/gaojian/index.php",
+              method: "post",
+              params: this.params({
+                act: "author_list",
+                p_id: sessionStorage.userId
+              })
+            })
+              .then(res => {
+                this.author_list = res.data.result;
+                console.log(this.author_list);
+              })
+              .catch(err => {
+                console.log(err);
+              });
+          } else {
+            this.$message.warning(res.data.message);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
     //步骤3保存并跳转到步骤4
     saveAndContinue3() {
-      this.body1 = false;
-      this.body2 = false;
-      this.body3 = false;
-      this.body4 = true;
-      this.body5 = false;
+      if (this.select_author.length == 0) {
+        this.$message.warning("请至少选择一位作者！");
+      } else {
+        this.body1 = false;
+        this.body2 = false;
+        this.body3 = false;
+        this.body4 = true;
+        this.body5 = false;
+      }
     },
     //步骤4返回步骤3
     returnStep3() {
@@ -368,18 +429,57 @@ export default {
       this.body4 = false;
       this.body5 = false;
     },
-    //提交成功
+    // 下载文件
+    downloadFile() {
+      location.href = this.form.file;
+    },
+    //提交数据
     submit() {
-      this.body1 = false;
-      this.body2 = false;
-      this.body3 = false;
-      this.body4 = false;
-      this.body5 = true;
+      let a_id = [];
+      this.select_author.forEach(item => {
+        a_id.push(item.author_id);
+      });
+      this.axios({
+        url: "/gaojian/index.php",
+        method: "post",
+        params: this.params({
+          act: "file_uploud",
+          p_id: sessionStorage.userId,
+          paper_title: this.form.paper_title,
+          topic: this.form.topic,
+          abstract: this.form.abstract,
+          remarks: this.form.remarks,
+          a_id: a_id.join(","),
+          type: "2",
+          file: this.form.file
+        })
+      })
+        .then(res => {
+          console.log(res);
+          if (res.data.code === 200) {
+            this.abstract_id = res.data.result.info.number;
+            this.body1 = false;
+            this.body2 = false;
+            this.body3 = false;
+            this.body4 = false;
+            this.body5 = true;
+          } else {
+            this.$message.warning("提交失败！");
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
 
     //上传文件成功的钩子函数
     uploadSuccess(res) {
-      this.form.file = res.result;
+      if (res.code === 200) {
+        this.$message.success("上传成功！");
+        this.form.file = res.result;
+      } else {
+        this.$message.warning(res.message);
+      }
     },
     handleExceed(files, fileList) {
       this.$message.warning(
@@ -537,32 +637,23 @@ export default {
     }
   }
   .body3 {
-    table {
+    .el-table {
       width: 100%;
       border: 1px solid #eaeaea;
       margin-top: 20px;
-      tr td {
-        text-align: center;
-        height: 60px;
-        i {
-          color: #2aace8;
-        }
-      }
-      tr td:last-child {
+      i {
         color: #2aace8;
-      }
-      tr:first-child td {
-        font-family: Arial-BoldMT;
         font-size: 16px;
-        color: #444;
-        font-weight: 700;
-      }
-      tr td:nth-child(2n) {
-        width: 20%;
+        cursor: pointer;
       }
     }
   }
   .body4 {
+    .el-table {
+      width: 100%;
+      border: 1px solid #eaeaea;
+      margin-top: 20px;
+    }
     .author-list {
       font-family: ArialMT;
       font-size: 20px;
@@ -599,6 +690,17 @@ export default {
       tr td:first-child {
         width: 30%;
         font-weight: 700;
+      }
+      tr td a.download {
+        width: 260px;
+        height: 46px;
+        color: #fff;
+        background: #b22f29;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 20px;
       }
     }
     .note {
