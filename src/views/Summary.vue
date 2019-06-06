@@ -126,7 +126,7 @@ export default {
       method: "post",
       url: "/gaojian/index.php",
       params: this.params({
-        act: "",
+        act: "payinfo",
       })
     })
       .then(res => {

@@ -11,7 +11,9 @@
               <h1>{{item.c_name}}</h1>
               <table>
                 <tr v-for="i in item.member_list" :key="i.m_cid">
-                  <td><span>{{i.m_key}}</span></td>
+                  <td>
+                    <span>{{i.m_key}}</span>
+                  </td>
                   <td>
                     <p v-for="j in i.m_value_a" :key="j.name">
                       <span>{{j.name}}</span>
@@ -24,9 +26,15 @@
           </div>
           <div class="submission" v-show="submission">
             <div v-html="article.content"></div>
-            <button class="el-icon-upload2" @click="toAbstractSubmission">&nbsp;&nbsp;Please upload Abstract</button>
+            <button
+              class="el-icon-upload2"
+              @click="toAbstractSubmission"
+            >&nbsp;&nbsp;Please upload Abstract</button>
             <div v-html="article.contents"></div>
-            <button class="el-icon-upload2" @click="toFullPaper">&nbsp;&nbsp;Please upload Full-Paper</button>
+            <button
+              class="el-icon-upload2"
+              @click="toFullPaper"
+            >&nbsp;&nbsp;Please upload Full-Paper</button>
           </div>
         </div>
       </div>
@@ -41,31 +49,79 @@ export default {
         img: "",
         title: "",
         content: "",
-        contents:""
+        contents: ""
       },
       id: null,
       committee: false,
       submission: false,
-      isArticle:true,
+      isArticle: true,
       committeeList: []
     };
   },
   methods: {
     toAbstractSubmission() {
-      this.$router.push({ path: "/abstractSubmission" });
+      if (sessionStorage.userId && sessionStorage.userEmail) {
+        this.axios({
+          url: "/gaojian/index.php",
+          method: "post",
+          params: this.params({
+            act: "personnel_info",
+            p_id: sessionStorage.userId
+          })
+        })
+          .then(res => {
+            if (res.data.result.p_first_name) {
+              this.$router.push({ path: "/abstractSubmission?id=9" });
+            } else {
+              this.$message.warning("您还没有完善个人信息，请先完善个人信息！");
+              setTimeout(() => {
+                this.$router.push({ path: "/userInfo?id=8" });
+              }, 3000);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        this.$router.push({ path: "/login" });
+      }
     },
     toFullPaper() {
-      this.$router.push({ path: "/fullpaper" });
+      if (sessionStorage.userId && sessionStorage.userEmail) {
+        this.axios({
+          url: "/gaojian/index.php",
+          method: "post",
+          params: this.params({
+            act: "list_full",
+            p_id: sessionStorage.userId
+          })
+        })
+          .then(res => {
+            if (res.data.result.Ab_LIST.length != 0) {
+              this.$router.push({ path: "/fullpaper?id=9" });
+            } else {
+              this.$message.warning("您还没有上传摘要，请先上传摘要！");
+              setTimeout(() => {
+                this.$router.push({ path: "/abstractSubmission?id=9" });
+              }, 3000);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        this.$router.push({ path: "/login" });
+      }
     }
   },
   created() {
     let id = this.$route.query.id;
     if (id == 9) {
-      this.isArticle=false
+      this.isArticle = false;
       this.submission = true;
     }
     if (id == 13) {
-      this.isArticle=false
+      this.isArticle = false;
       this.axios({
         url: "/gaojian/index.php",
         method: "post",
@@ -133,7 +189,8 @@ img.banner {
       margin-top: 30px;
       .submission {
         width: 100%;
-        h1,h2 {
+        h1,
+        h2 {
           font-family: Arial-BoldMT;
           font-size: 26px;
           font-weight: 700;
@@ -196,7 +253,7 @@ img.banner {
           }
           tr td:first-child {
             width: 30%;
-            span{
+            span {
               width: 100%;
               height: 100%;
               display: flex;
@@ -206,7 +263,7 @@ img.banner {
               box-sizing: border-box;
             }
           }
-          tr td:last-child{
+          tr td:last-child {
             display: flex;
             justify-content: flex-start;
             flex-direction: column;

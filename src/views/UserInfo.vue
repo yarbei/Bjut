@@ -53,8 +53,8 @@
           </el-form-item>
           <el-form-item label="Title" prop="p_title">
             <el-select v-model="ruleForm.p_title" placeholder>
-              <el-option label="title1" value="title1"></el-option>
-              <el-option label="title2" value="title2"></el-option>
+              <el-option value="title1"></el-option>
+              <el-option value="title2"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="Affiliation" prop="p_affiliation">
@@ -65,8 +65,7 @@
           </el-form-item>
           <el-form-item label="Country/Region" prop="p_country">
             <el-select v-model="ruleForm.p_country" placeholder>
-              <el-option label="Country/Region1" value="Country/Region1"></el-option>
-              <el-option label="Country/Region2" value="Country/Region2"></el-option>
+              <el-option v-for="item in country" :key="item.id" :value="item.country"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="State/Province" prop="p_province">
@@ -82,22 +81,22 @@
             <el-input v-model="ruleForm.p_address"></el-input>
           </el-form-item>
           <el-form-item label="Phone" class="phone-fax">
-            <el-input v-model="ruleForm.p_phone.phone1" class="short"></el-input>
+            <el-input v-model="phone1" class="short" type="number"></el-input>
             <i>-</i>
-            <el-input v-model="ruleForm.p_phone.phone2" class="short"></el-input>
+            <el-input v-model="phone2" class="short" type="number"></el-input>
             <i>-</i>
-            <el-input v-model="ruleForm.p_phone.phone3" class="long"></el-input>
+            <el-input v-model="phone3" class="long" type="number"></el-input>
             <i>-</i>
-            <el-input v-model="ruleForm.p_phone.phone4" class="short"></el-input>
+            <el-input v-model="phone4" class="short" type="number"></el-input>
           </el-form-item>
           <el-form-item label="Fax" class="phone-fax">
-            <el-input v-model="ruleForm.p_fax.fax1" class="short"></el-input>
+            <el-input v-model="fax1" class="short" type="number"></el-input>
             <i>-</i>
-            <el-input v-model="ruleForm.p_fax.fax2" class="short"></el-input>
+            <el-input v-model="fax2" class="short" type="number"></el-input>
             <i>-</i>
-            <el-input v-model="ruleForm.p_fax.fax3" class="long"></el-input>
+            <el-input v-model="fax3" class="long" type="number"></el-input>
             <i>-</i>
-            <el-input v-model="ruleForm.p_fax.fax4" class="short"></el-input>
+            <el-input v-model="fax4" class="short" type="number"></el-input>
           </el-form-item>
         </el-form>
         <div class="button-box">
@@ -114,13 +113,22 @@
 export default {
   data() {
     return {
+      country: [],
       head: this.$route.matched[this.$route.matched.length - 1].meta.title, //头部标题
       note: "",
       isInfo: false, //是否显示confirm按钮
       isNotInfo: true, //是否显示save，submit按钮
+      phone1: "",
+      phone2: "",
+      phone3: "",
+      phone4: "",
+      fax1: "",
+      fax2: "",
+      fax3: "",
+      fax4: "",
       ruleForm: {
         //表单绑定数据
-        p_id:"",
+        p_id: "",
         p_email: "",
         p_first_name: "",
         p_middle_name: "",
@@ -136,58 +144,90 @@ export default {
         p_city: "",
         p_zip: "",
         p_address: "",
-        p_phone: { phone1: "", phone2: "", phone3: "", phone4: "" },
-        p_fax: { fax1: "", fax2: "", fax3: "", fax4: "" }
+        p_phone: "",
+        p_fax: ""
       },
       rules: {
         //表单验证规则
         p_first_name: [
-          { required: true, message: "请输入firstName", trigger: "blur" }
+          {
+            required: true,
+            message: "请输入firstName",
+            trigger: ["blur", "change"]
+          }
         ],
         p_middle_name: [],
         p_last_name: [
-          { required: true, message: "请输入lasttName", trigger: "blur" }
+          {
+            required: true,
+            message: "请输入lasttName",
+            trigger: ["blur", "change"]
+          }
         ],
         p_gender: [],
         p_birthday: [],
         p_student: [
-          { required: true, message: "请选择Yes or No", trigger: "change" }
+          {
+            required: true,
+            message: "请选择Yes or No",
+            trigger: ["blur", "change"]
+          }
         ],
         p_title: [
-          { required: true, message: "请选择title", trigger: "change" }
+          {
+            required: true,
+            message: "请选择title",
+            trigger: ["blur", "change"]
+          }
         ],
         p_affiliation: [
-          { required: true, message: "请输入firstName", trigger: "blur" }
+          {
+            required: true,
+            message: "请输入firstName",
+            trigger: ["blur", "change"]
+          }
         ],
         p_department: [],
         p_country: [
-          { required: true, message: "请选择countryRegion", trigger: "change" }
+          {
+            required: true,
+            message: "请选择countryRegion",
+            trigger: ["blur", "change"]
+          }
         ],
         p_province: [],
-        p_city: [{ required: true, message: "请输入city", trigger: "blur" }],
+        p_city: [
+          { required: true, message: "请输入city", trigger: ["blur", "change"] }
+        ],
         p_zip: [
-          { required: true, message: "请输入zipPostalCode", trigger: "blur" }
+          {
+            required: true,
+            message: "请输入zipPostalCode",
+            trigger: ["blur", "change"]
+          }
         ],
         p_address: [
-          { required: true, message: "请输入address", trigger: "blur" }
-        ],
-        p_phone: [],
-        p_fax: []
+          {
+            required: true,
+            message: "请输入address",
+            trigger: ["blur", "change"]
+          }
+        ]
       }
     };
   },
   methods: {
     resetForm() {
-      for(var item in this.ruleForm){
-        this.ruleForm[item]=''
+      for (var item in this.ruleForm) {
+        this.ruleForm[item] = "";
       }
     },
     //提交表单
     subUserInfo() {
-      var phone=this.ruleForm.p_phone
-      var fax=this.ruleForm.p_fax
-      this.ruleForm.p_phone=phone.phone1+'-'+phone.phone2+'-'+phone.phone3+'-'+phone.phone4
-      this.ruleForm.p_fax=fax.fax1+'-'+fax.fax2+'-'+fax.fax3+'-'+fax.fax4
+      this.ruleForm.p_phone =
+        this.phone1 + "-" + this.phone2 + "-" + this.phone3 + "-" + this.phone4;
+      this.ruleForm.p_fax =
+        this.fax1 + "-" + this.fax2 + "-" + this.fax3 + "-" + this.fax4;
       this.axios({
         method: "post",
         url: "/gaojian/index.php",
@@ -195,11 +235,12 @@ export default {
           act: "change_user",
           ...this.ruleForm
         })
-      }).then(res=>{
-        if(res.status===200){
-          this.$message(res.data.message)
+      }).then(res => {
+        if (res.status === 200) {
+          this.$message(res.data.message);
+          // this.$router.push({path:'/'})
         }
-      })
+      });
     },
     //返回个人中心
     backToUserCenter() {
@@ -211,7 +252,7 @@ export default {
   created() {
     if (sessionStorage.userEmail && sessionStorage.userId) {
       this.ruleForm.p_email = sessionStorage.userEmail;
-      this.ruleForm.p_id =sessionStorage.userId
+      this.ruleForm.p_id = sessionStorage.userId;
     }
     this.axios({
       method: "post",
@@ -222,6 +263,7 @@ export default {
       })
     })
       .then(res => {
+        console.log(res);
         var data = res.data.result;
         this.ruleForm.p_first_name = data.p_first_name;
         this.ruleForm.p_middle_name = data.p_middle_name;
@@ -237,14 +279,14 @@ export default {
         this.ruleForm.p_city = data.p_city;
         this.ruleForm.p_zip = data.p_zip;
         this.ruleForm.p_address = data.p_address;
-        this.ruleForm.p_phone.phone1=data.phone[0];
-        this.ruleForm.p_phone.phone2=data.phone[1];
-        this.ruleForm.p_phone.phone3=data.phone[2];
-        this.ruleForm.p_phone.phone4=data.phone[3];
-        // this.ruleForm.P_fax.fax1=data.fax[0];
-        // this.ruleForm.p_fax.fax2=data.fax[1];
-        // this.ruleForm.p_fax.fax3=data.fax[2];
-        // this.ruleForm.p_fax.fax4=data.fax[3];
+        this.phone1 = data.phone[0];
+        this.phone2 = data.phone[1];
+        this.phone3 = data.phone[2];
+        this.phone4 = data.phone[3];
+        this.fax1 = data.fax[0];
+        this.fax2 = data.fax[1];
+        this.fax3 = data.fax[2];
+        this.fax4 = data.fax[3];
         if (data.p_first_name === "") {
           //判断返回数据是否有p_first_name字段选择显示按钮以及通知消息内容
           this.isInfo = false;
@@ -257,6 +299,19 @@ export default {
           this.note =
             "Note:This information will be used to generate your name badge, so please complete all fields accurately.";
         }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    this.axios({
+      url: "/gaojian/index.php",
+      method: "post",
+      params: this.params({
+        act: "country_list"
+      })
+    })
+      .then(res => {
+        this.country = res.data.result;
       })
       .catch(err => {
         console.log(err);
@@ -310,6 +365,13 @@ export default {
       width: 100%;
       margin-top: 30px;
       border-bottom: 1px solid #e3e3e3;
+      /deep/ input::-webkit-outer-spin-button,
+      /deep/ input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+      }
+      /deep/ input[type="number"] {
+        -moz-appearance: textfield;
+      }
       .el-form-item {
         width: 100%;
         height: 45px;

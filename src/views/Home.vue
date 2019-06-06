@@ -14,10 +14,8 @@
           </div>
           <ul>
             <li v-for="item in data.Important" :key="item.id">
-              <router-link :to="'/article?id='+item.id" class="hidden1">
-                <span>{{item.title}}</span>
-                <span class="time">{{item.time}}</span>
-              </router-link>
+              <span>{{item.title}}</span>
+              <span class="time">{{item.time}}</span>
             </li>
           </ul>
         </div>
@@ -42,14 +40,14 @@
       <div class="right">
         <div @click="toLoginOrUserCenter" class="login">{{login}}</div>
         <router-link to="/article?id=9" class="abstract">Abstract/Paper Submission</router-link>
-        <router-link to="/summary?id=9" class="online">Online Registration</router-link>
+        <router-link to="/article?id=8" class="online">Online Registration</router-link>
         <div class="card venue">
           <div class="title">
             <i class="icon"></i>
             <span>Venue</span>
           </div>
           <h1 class="address hidden1">{{data.About_us.gsdz}}</h1>
-          <h1>
+          <h1 @click="toAddress">
             Transportation to Venue
             <i></i>
           </h1>
@@ -87,13 +85,16 @@ export default {
       }
     };
   },
-  methods:{
-    toLoginOrUserCenter(){
-      if(sessionStorage.userId && sessionStorage.userEmail){
-        this.$router.push({path:'/userCenter?id=8'})
-      }else{
-        this.$router.push({path:'/login'})
+  methods: {
+    toLoginOrUserCenter() {
+      if (sessionStorage.userId && sessionStorage.userEmail) {
+        this.$router.push({ path: "/userCenter?id=8" });
+      } else {
+        this.$router.push({ path: "/login" });
       }
+    },
+    toAddress(){
+      this.$router.push({path:'/article?id=6'})
     }
   },
   created() {
@@ -184,24 +185,21 @@ export default {
     flex-direction: column;
     li {
       width: 100%;
-      /deep/ a {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 10px;
-        span {
-          max-width: 350px;
-          font-family: ArialMT;
-          font-size: 18px;
-          color: #000;
-        }
-        .time {
-          font-size: 16px;
-          font-family: Arial-BoldMT;
-          color: #727272;
-          opacity: 0.8;
-        }
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      span {
+        max-width: 350px;
+        font-family: ArialMT;
+        font-size: 18px;
+        color: #000;
+      }
+      .time {
+        font-size: 16px;
+        font-family: Arial-BoldMT;
+        color: #727272;
+        opacity: 0.8;
       }
     }
   }
@@ -252,7 +250,8 @@ export default {
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
-    /deep/ a ,.login{
+    /deep/ a,
+    .login {
       width: 100%;
       height: 58px;
       display: flex;
@@ -288,6 +287,7 @@ export default {
         font-family: ArialMT;
         font-size: 18px;
         color: #b22f29;
+        cursor: pointer;
         i {
           display: flex;
           width: 0;

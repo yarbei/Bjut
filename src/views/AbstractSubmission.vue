@@ -75,7 +75,9 @@
             <el-input v-model="form.last_name"></el-input>
           </el-form-item>
           <el-form-item label="Country/Region" required>
-            <el-input v-model="form.author_country"></el-input>
+            <el-select v-model="form.author_country" placeholder>
+              <el-option v-for="item in country" :key="item.id" :value="item.country"></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="Affiliation" required>
             <el-input v-model="form.author_affiliation"></el-input>
@@ -217,7 +219,8 @@ export default {
       body5: false,
       fileList: [],
       select_author: [],
-      abstract_id: ""
+      abstract_id: "",
+      country: []
     };
   },
   methods: {
@@ -377,37 +380,51 @@ export default {
     },
     //删除该作者
     deleteAuthor(index, row) {
-      this.axios({
-        url: "/gaojian/index.php",
-        method: "post",
-        params: this.params({
-          act: "del_author",
-          id: row.author_id
-        })
+      this.$confirm("此操作将永久删除该作者, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
-        .then(res => {
-          if (res.data.code === 200) {
-            this.$message.success(res.data.message);
-            this.axios({
-              url: "/gaojian/index.php",
-              method: "post",
-              params: this.params({
-                act: "author_list",
-                p_id: sessionStorage.userId
-              })
+        .then(() => {
+          this.axios({
+            url: "/gaojian/index.php",
+            method: "post",
+            params: this.params({
+              act: "del_author",
+              id: row.author_id
             })
-              .then(res => {
-                this.author_list = res.data.result;
-              })
-              .catch(err => {
-                console.log(err);
-              });
-          } else {
-            this.$message.warning(res.data.message);
-          }
+          })
+            .then(res => {
+              if (res.data.code === 200) {
+                this.$message.success(res.data.message);
+                this.axios({
+                  url: "/gaojian/index.php",
+                  method: "post",
+                  params: this.params({
+                    act: "author_list",
+                    p_id: sessionStorage.userId
+                  })
+                })
+                  .then(res => {
+                    this.author_list = res.data.result;
+                    this.$message.success("删除成功！");
+                  })
+                  .catch(err => {
+                    console.log(err);
+                  });
+              } else {
+                this.$message.warning(res.data.message);
+              }
+            })
+            .catch(err => {
+              console.log(err);
+            });
         })
-        .catch(err => {
-          console.log(err);
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
         });
     },
     //步骤3保存并跳转到步骤4
@@ -502,6 +519,20 @@ export default {
     })
       .then(res => {
         this.topic = res.data.result;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    this.axios({
+      url: "/gaojian/index.php",
+      method: "post",
+      params: this.params({
+        act: "country_list"
+      })
+    })
+      .then(res => {
+        console.log(res);
+        this.country = res.data.result;
       })
       .catch(err => {
         console.log(err);

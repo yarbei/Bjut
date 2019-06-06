@@ -89,14 +89,14 @@
         <p>4. Click the confirmation link in the mail, Reset the password successfully.</p>
         <p>
           * If you have a problem accessing your profile, please
-          <span>contact us.</span>
+          <router-link to="/article?id=1">contact us.</router-link>
         </p>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { setTimeout } from "timers";
+import { setTimeout, setInterval, clearInterval } from "timers";
 export default {
   data() {
     return {
@@ -129,7 +129,7 @@ export default {
       rules: {
         //表单的验证规则
         email: [
-          { required: true, message: "请输入Email", trigger: "blur" },
+          { required: true, message: "请输入Email", trigger: ["blur", "change"] },
           {
             type: "email",
             message: "请输入正确的邮箱地址",
@@ -137,8 +137,8 @@ export default {
           }
         ],
         pass: [
-          { required: true, message: "请输入密码", trigger: "blur" },
-          { min: 6, message: "密码最少6个字符", trigger: "blur" }
+          { required: true, trigger: ["blur", "change"] },
+          { min: 6, message: "密码最少6个字符", trigger: ["blur", "change"] }
         ]
       }
     };
@@ -220,17 +220,22 @@ export default {
             })
           })
             .then(res => {
+              let i =8;
+              this.$message({
+                type:'success',
+                message:`验证邮件已发送，请注意查收！即将跳转到首页！`,
+                duration:5000
+              })
               this.isEmailCode = false;
-              setTimeout(function() {
-                this.isEmailCode = true;
-              }, 1000);
-              this.$message.success("验证邮件已发送，请注意查收！");
-              // this.$router.push({ path: "userInfo?id=8" });
+              setTimeout(()=>{
+                this.$router.push({path:'/'})
+              },5000)
             })
             .catch(err => {
               console.log(err);
             });
         } else {
+          console.log(this.isEmailCode)
           this.$message.warning("您注册太过频繁，请稍后再试");
         }
       } else {
@@ -369,7 +374,7 @@ img.banner {
     h2 {
       margin-top: 40px;
     }
-    span {
+    a {
       font-family: ArialMT;
       font-size: 16px;
       color: #b22f29;

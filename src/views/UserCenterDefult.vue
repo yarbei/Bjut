@@ -74,6 +74,7 @@
   </div>
 </template>
 <script>
+import { setTimeout } from 'timers';
 export default {
   data() {
     return {
@@ -95,11 +96,25 @@ export default {
     },
     //点击按钮跳转AbstractSubmission
     toAbstractSubmission() {
-      this.$router.push({ path: "/abstractSubmission?id=8" });
+      if (this.userInfo.p_first_name) {
+        this.$router.push({ path: "/abstractSubmission?id=9" });
+      } else {
+        this.$message.warning("您还没有完善个人信息，请先完善个人信息！");
+        setTimeout(()=>{
+        this.$router.push({ path: "/userInfo?id=8" });
+        },3000)
+      }
     },
     //点击按钮跳转FullPaper
     toFullPaper() {
-      this.$router.push({ path: "/fullpaper?id=8" });
+      if (this.ab_list.length!=0) {
+        this.$router.push({ path: "/fullpaper?id=9" });
+      } else {
+        this.$message.warning("您还没有上传摘要，请先上传摘要！");
+        setTimeout(()=>{
+        this.$router.push({ path: "/abstractSubmission?id=9" });
+        },3000)
+      }
     }
   },
   created() {
@@ -141,9 +156,9 @@ export default {
     })
       .then(res => {
         this.Participation.hotel = res.data.result.About_us.hotel;
-        this.Participation.registration_fee = res.data.result.About_us.registration_fee;
+        this.Participation.registration_fee =
+          res.data.result.About_us.registration_fee;
         this.Participation.url_now = res.data.result.About_us.url_now;
-        
       })
       .catch(err => {
         console.log(err);
@@ -172,7 +187,8 @@ export default {
     width: 100%;
     padding: 20px;
     box-sizing: border-box;
-    button,a.button {
+    button,
+    a.button {
       width: 260px;
       display: flex;
       padding: 15px 40px;
