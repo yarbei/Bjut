@@ -23,7 +23,9 @@
           <tr v-for="item in ab_list" :key="item.number">
             <td>{{item.number}}</td>
             <td>{{item.paper_title}}</td>
-            <td><a :href="item.file">Download</a></td>
+            <td>
+              <a :href="item.file">Download</a>
+            </td>
           </tr>
         </table>
         <button @click="toAbstractSubmission">Submit a new Abstract</button>
@@ -41,7 +43,9 @@
           <tr v-for="item in full_list" :key="item.number">
             <td>{{item.number}}</td>
             <td>{{item.paper_title}}</td>
-            <td><a :href="item.file">Download</a></td>
+            <td>
+              <a :href="item.file">Download</a>
+            </td>
           </tr>
         </table>
         <button @click="toFullPaper">Submit a new Full-Paper</button>
@@ -53,18 +57,18 @@
         <table class="table3" border="1">
           <tr>
             <td>Registration fee</td>
-            <td>RMB 4500</td>
+            <td>{{Participation.registration_fee}}</td>
           </tr>
           <tr>
             <td>Hotel reservation</td>
-            <td>1/Jun/2020 – 3/Jun/2020</td>
+            <td>{{Participation.hotel}}</td>
           </tr>
           <tr>
             <td>Participate tour visit</td>
             <td>Yes/No</td>
           </tr>
         </table>
-        <button>Registration now</button>
+        <a class="button" :href="Participation.url_now">Registration now</a>
       </div>
     </div>
   </div>
@@ -75,8 +79,13 @@ export default {
     return {
       head: this.$route.matched[this.$route.matched.length - 1].meta.title,
       userInfo: {},
-      ab_list:[],
-      full_list:[]
+      ab_list: [],
+      full_list: [],
+      Participation: {
+        hotel: "",
+        registration_fee: "",
+        url_now: ""
+      }
     };
   },
   methods: {
@@ -103,9 +112,8 @@ export default {
       })
     })
       .then(res => {
-        this.ab_list=res.data.result.Ab_LIST
-        this.full_list=res.data.result.FULL_LIST
-        console.log(res);
+        this.ab_list = res.data.result.Ab_LIST;
+        this.full_list = res.data.result.FULL_LIST;
       })
       .catch(err => {
         console.log(err);
@@ -119,8 +127,23 @@ export default {
       })
     })
       .then(res => {
-        console.log(res);
         this.userInfo = res.data.result;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    this.axios({
+      url: "/gaojian/index.php",
+      method: "post",
+      params: this.params({
+        act: "index"
+      })
+    })
+      .then(res => {
+        this.Participation.hotel = res.data.result.About_us.hotel;
+        this.Participation.registration_fee = res.data.result.About_us.registration_fee;
+        this.Participation.url_now = res.data.result.About_us.url_now;
+        
       })
       .catch(err => {
         console.log(err);
@@ -149,7 +172,8 @@ export default {
     width: 100%;
     padding: 20px;
     box-sizing: border-box;
-    button {
+    button,a.button {
+      width: 260px;
       display: flex;
       padding: 15px 40px;
       box-sizing: border-box;
@@ -157,6 +181,9 @@ export default {
       color: #fefefe;
       border: 0;
       margin: 20px auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     p {
       font-family: ArialMT;
@@ -171,7 +198,7 @@ export default {
       tr td {
         height: 66px;
         text-align: center;
-        a{
+        a {
           color: #2aace8;
         }
       }

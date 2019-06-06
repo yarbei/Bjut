@@ -75,7 +75,6 @@ export default {
       })
         .then(res => {
           this.committeeList = res.data.result;
-          console.log(this.committeeList);
         })
         .catch(err => {
           console.log(err);
@@ -92,7 +91,6 @@ export default {
     })
       .then(res => {
         this.article = res.data.result;
-        console.log(res)
       })
       .catch(err => {
         console.log(err);

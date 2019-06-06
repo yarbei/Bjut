@@ -220,7 +220,6 @@ export default {
             })
           })
             .then(res => {
-              console.log(res);
               this.isEmailCode = false;
               setTimeout(function() {
                 this.isEmailCode = true;

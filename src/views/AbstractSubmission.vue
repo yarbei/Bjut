@@ -276,7 +276,6 @@ export default {
         })
           .then(res => {
             this.author_list = res.data.result;
-            console.log(this.author_list);
           })
           .catch(err => {
             console.log(err);
@@ -329,7 +328,6 @@ export default {
                   this.form.author_country = "";
                   this.form.author_affiliation = "";
                 } else {
-                  console.log(res);
                   this.$message.warning(res.data.message);
                 }
               })
@@ -352,7 +350,6 @@ export default {
     //选中作者的回调函数
     handleSelectionChange(val) {
       this.select_author = val;
-      console.log(this.select_author);
     },
     //该作者向前排序
     topAuthor(author_list, index) {
@@ -401,7 +398,6 @@ export default {
             })
               .then(res => {
                 this.author_list = res.data.result;
-                console.log(this.author_list);
               })
               .catch(err => {
                 console.log(err);
@@ -460,7 +456,6 @@ export default {
         })
       })
         .then(res => {
-          console.log(res);
           if (res.data.code === 200) {
             this.abstract_id = res.data.result.info.number;
             this.body1 = false;

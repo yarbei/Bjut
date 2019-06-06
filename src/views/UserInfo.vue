@@ -188,7 +188,6 @@ export default {
       var fax=this.ruleForm.p_fax
       this.ruleForm.p_phone=phone.phone1+'-'+phone.phone2+'-'+phone.phone3+'-'+phone.phone4
       this.ruleForm.p_fax=fax.fax1+'-'+fax.fax2+'-'+fax.fax3+'-'+fax.fax4
-      console.log(this.ruleForm)
       this.axios({
         method: "post",
         url: "/gaojian/index.php",
@@ -197,7 +196,6 @@ export default {
           ...this.ruleForm
         })
       }).then(res=>{
-        console.log(res)
         if(res.status===200){
           this.$message(res.data.message)
         }
@@ -224,7 +222,6 @@ export default {
       })
     })
       .then(res => {
-        console.log(res.data.result);
         var data = res.data.result;
         this.ruleForm.p_first_name = data.p_first_name;
         this.ruleForm.p_middle_name = data.p_middle_name;

@@ -53,7 +53,7 @@
             Transportation to Venue
             <i></i>
           </h1>
-          <img src="../assets/img/bg.png" alt>
+          <img :src="data.About_us.add_img" alt>
         </div>
         <div class="card contact">
           <div class="title">
@@ -90,7 +90,7 @@ export default {
   methods:{
     toLoginOrUserCenter(){
       if(sessionStorage.userId && sessionStorage.userEmail){
-        this.$router.push({path:'/userCenter?id=9'})
+        this.$router.push({path:'/userCenter?id=8'})
       }else{
         this.$router.push({path:'/login'})
       }
@@ -109,7 +109,6 @@ export default {
     })
       .then(res => {
         this.data = res.data.result;
-        console.log(this.data);
       })
       .catch(err => {
         console.log(err);
