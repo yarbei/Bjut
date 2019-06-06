@@ -235,7 +235,6 @@ export default {
               console.log(err);
             });
         } else {
-          console.log(this.isEmailCode)
           this.$message.warning("您注册太过频繁，请稍后再试");
         }
       } else {

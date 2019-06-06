@@ -35,7 +35,7 @@
           </el-form-item>
           <el-form-item label="Birthday">
             <el-col>
-              <el-form-item prop="p_birthday">
+              <el-form-item>
                 <el-date-picker
                   type="date"
                   placeholder
@@ -110,6 +110,7 @@
   </div>
 </template>
 <script>
+import { setTimeout } from "timers";
 export default {
   data() {
     return {
@@ -164,8 +165,6 @@ export default {
             trigger: ["blur", "change"]
           }
         ],
-        p_gender: [],
-        p_birthday: [],
         p_student: [
           {
             required: true,
@@ -236,9 +235,13 @@ export default {
           ...this.ruleForm
         })
       }).then(res => {
-        if (res.status === 200) {
-          this.$message(res.data.message);
-          // this.$router.push({path:'/'})
+        if (res.data.code === 200) {
+          this.$message.success("提交成功！即将前往首页！");
+          setTimeout(() => {
+            this.$router.push({ path: "/" });
+          }, 3000);
+        }else{
+          this.$message.warning(res.data.message);
         }
       });
     },
@@ -263,7 +266,6 @@ export default {
       })
     })
       .then(res => {
-        console.log(res);
         var data = res.data.result;
         this.ruleForm.p_first_name = data.p_first_name;
         this.ruleForm.p_middle_name = data.p_middle_name;

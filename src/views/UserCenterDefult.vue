@@ -74,7 +74,7 @@
   </div>
 </template>
 <script>
-import { setTimeout } from 'timers';
+import { setTimeout } from "timers";
 export default {
   data() {
     return {
@@ -99,21 +99,25 @@ export default {
       if (this.userInfo.p_first_name) {
         this.$router.push({ path: "/abstractSubmission?id=9" });
       } else {
-        this.$message.warning("您还没有完善个人信息，请先完善个人信息！");
-        setTimeout(()=>{
-        this.$router.push({ path: "/userInfo?id=8" });
-        },3000)
+        this.$alert(
+          "您还没有完善个人信息，请先完善个人信息！点击确定前往个人信息页面!",
+          "提示"
+        ).then(() => {
+          this.$router.push({ path: "/userInfo?id=8" });
+        });
       }
     },
     //点击按钮跳转FullPaper
     toFullPaper() {
-      if (this.ab_list.length!=0) {
+      if (this.ab_list.length != 0) {
         this.$router.push({ path: "/fullpaper?id=9" });
       } else {
-        this.$message.warning("您还没有上传摘要，请先上传摘要！");
-        setTimeout(()=>{
-        this.$router.push({ path: "/abstractSubmission?id=9" });
-        },3000)
+        this.$alert(
+          "您还没有上传摘要，请先上传摘要！点击确定前往上传摘要页面!",
+          "提示"
+        ).then(() => {
+          this.$router.push({ path: "/abstractSubmission?id=9" });
+        });
       }
     }
   },
