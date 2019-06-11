@@ -197,9 +197,8 @@ export default {
       }
       .time {
         font-size: 16px;
-        font-family: Arial-BoldMT;
+        font-family: 黑体;
         color: #727272;
-        opacity: 0.8;
       }
     }
   }

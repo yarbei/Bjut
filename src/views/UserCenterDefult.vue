@@ -218,6 +218,7 @@ export default {
       tr td {
         height: 66px;
         text-align: center;
+        border: 1px solid #eaeaea;
         a {
           color: #2aace8;
         }

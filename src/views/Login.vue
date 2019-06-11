@@ -129,7 +129,11 @@ export default {
       rules: {
         //表单的验证规则
         email: [
-          { required: true, message: "请输入Email", trigger: ["blur", "change"] },
+          {
+            required: true,
+            message: "请输入Email",
+            trigger: ["blur", "change"]
+          },
           {
             type: "email",
             message: "请输入正确的邮箱地址",
@@ -159,7 +163,29 @@ export default {
           this.$message.success(res.data.message);
           sessionStorage.userId = res.data.result.p_id;
           sessionStorage.userEmail = this.formLogin.email;
-          this.$router.push({ path: "userCenter?id=8" });
+          this.axios({
+            method: "post",
+            url: "/gaojian/index.php",
+            params: this.params({
+              act: "personnel_info",
+              p_id: sessionStorage.userId
+            })
+          })
+            .then(res => {
+              if (res.data.result.p_first_name) {
+                this.$router.push({ path: "/userCenter?id=8" });
+              } else {
+                this.$alert(
+                  "您还没有完善个人信息，请先完善个人信息！点击确定前往个人信息页面!",
+                  "提示"
+                ).then(() => {
+                  this.$router.push({ path: "/userInfo?id=8" });
+                });
+              }
+            })
+            .catch(err => {
+              console.log(err);
+            });
         } else {
           this.$message.error(res.data.message);
         }
@@ -220,16 +246,16 @@ export default {
             })
           })
             .then(res => {
-              let i =8;
+              let i = 8;
               this.$message({
-                type:'success',
-                message:`验证邮件已发送，请注意查收！即将跳转到首页！`,
-                duration:5000
-              })
+                type: "success",
+                message: `验证邮件已发送，请注意查收！即将跳转到首页！`,
+                duration: 5000
+              });
               this.isEmailCode = false;
-              setTimeout(()=>{
-                this.$router.push({path:'/'})
-              },5000)
+              setTimeout(() => {
+                this.$router.push({ path: "/" });
+              }, 5000);
             })
             .catch(err => {
               console.log(err);

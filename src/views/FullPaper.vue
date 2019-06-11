@@ -261,7 +261,7 @@ export default {
         color: #fff;
         font-family: ArialMT;
         font-size: 16px;
-        background: #2aace8;
+        background: #b22f29;
         border: 0;
         margin: 0 12px;
         cursor: pointer;

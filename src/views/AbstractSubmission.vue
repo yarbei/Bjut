@@ -40,18 +40,21 @@
             <br>(4) The symposium will only call for Oral presentation.
             <br>(5) Corresponding author will receive all correspondence concerning the submission and is responsible for informing the other authors of the status of the submission.
           </p>
-          <el-upload
-            class="upload-demo"
-            :action="filed"
-            :on-success="uploadSuccess"
-            :before-remove="beforeRemove"
-            :limit="1"
-            :on-exceed="handleExceed"
-            :file-list="fileList"
-            :data="act"
-          >
-            <el-button size="small" type="primary">Extend Abstract</el-button>
-          </el-upload>
+          <p class="up">
+            <span>*Extend Abstract</span>
+            <el-upload
+              class="upload-demo"
+              :action="filed"
+              :on-success="uploadSuccess"
+              :before-remove="beforeRemove"
+              :limit="1"
+              :on-exceed="handleExceed"
+              :file-list="fileList"
+              :data="act"
+            >
+              <el-button size="small" type="primary">Extend Abstract</el-button>
+            </el-upload>
+          </p>
         </div>
         <div class="button-box">
           <button class="return" @click="returnStep1">Return</button>
@@ -60,7 +63,10 @@
       </div>
       <div class="body body3" v-show="body3">
         <img src="../assets/img/step3.png" alt>
-        <div class="add-author">Add Author</div>
+        <div class="add-author">
+          Add Author
+          <el-checkbox v-model="checked">Use My infomation</el-checkbox>
+        </div>
         <div
           class="note"
         >Please select if this is the corresponding author, Only one Corresponding Author is required.</div>
@@ -92,13 +98,20 @@
           style="width: 100%"
           border
           align="center"
-          @selection-change="handleSelectionChange"
+          @current-change="handleCurrentChange"
         >
           >
           <el-table-column prop="author_name" label="Name" align="center"></el-table-column>
           <el-table-column prop="author_country" label="Country/Region" align="center"></el-table-column>
           <el-table-column prop="author_affiliation" label="Affiliation" align="center"></el-table-column>
-          <el-table-column type="selection" @select="selectAuthor(selection,row)" align="center"></el-table-column>
+          <el-table-column label="Corresponding" align="center" @click="handleCurrentChange(scope.$index,row)">
+            <template slot="header" slot-scope="scope">
+              <span>Corresponding</span>
+            </template>
+            <template slot-scope="scope">
+              <el-radio v-model="corresponding" disabled>Yes</el-radio>
+            </template>
+          </el-table-column>
           <el-table-column label="Order" align="center">
             <template slot="header" slot-scope="scope">
               <span>Order</span>
@@ -220,7 +233,9 @@ export default {
       fileList: [],
       select_author: [],
       abstract_id: "",
-      country: []
+      country: [],
+      corresponding:'',
+      checked:''
     };
   },
   methods: {
@@ -351,8 +366,8 @@ export default {
       }
     },
     //选中作者的回调函数
-    handleSelectionChange(val) {
-      this.select_author = val;
+    handleCurrentChange(index,row) {
+      console.log(index)
     },
     //该作者向前排序
     topAuthor(author_list, index) {
@@ -575,6 +590,17 @@ export default {
       font-size: 16px;
       color: #444;
     }
+    p.up {
+      display: flex;
+      align-items: center;
+      span {
+        font-family: ArialMT;
+        font-size: 16px;
+        line-height: 32px;
+        letter-spacing: 0px;
+        color: #444444;
+      }
+    }
     .note {
       padding: 15px 20px;
       box-sizing: border-box;
@@ -649,7 +675,7 @@ export default {
     .add-author {
       width: 100%;
       display: flex;
-      justify-content: flex-start;
+      justify-content: space-between;
       align-items: center;
       font-family: ArialMT;
       font-size: 20px;
@@ -657,6 +683,15 @@ export default {
       padding: 18px 0;
       box-sizing: border-box;
       border-bottom: 2px solid #2aace8;
+      .el-checkbox {
+        font-family: ArialMT;
+        font-size: 16px;
+        font-weight: normal;
+        font-stretch: normal;
+        line-height: 24px;
+        letter-spacing: 0px;
+        color: #2aace8;
+      }
     }
     .author-list {
       width: 100%;
@@ -665,6 +700,25 @@ export default {
       background: #e9f7fd;
       color: #2793c5;
       margin-top: 40px;
+    }
+  }
+  .body2 {
+    /deep/ .upload-demo {
+      margin-top: 20px;
+    }
+    /deep/ .el-upload {
+      display: flex;
+      justify-content: flex-start;
+    }
+    button {
+      display: flex;
+      padding: 15px 40px;
+      box-sizing: border-box;
+      background: #2aace8;
+      color: #fefefe;
+      border: 0;
+      margin: 0;
+      margin-left: 20px;
     }
   }
   .body3 {
