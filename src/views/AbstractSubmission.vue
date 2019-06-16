@@ -98,18 +98,22 @@
           style="width: 100%"
           border
           align="center"
-          @current-change="handleCurrentChange"
+          highlight-current-row
         >
           >
           <el-table-column prop="author_name" label="Name" align="center"></el-table-column>
           <el-table-column prop="author_country" label="Country/Region" align="center"></el-table-column>
           <el-table-column prop="author_affiliation" label="Affiliation" align="center"></el-table-column>
-          <el-table-column label="Corresponding" align="center" @click="handleCurrentChange(scope.$index,row)">
+          <el-table-column label="Corresponding" align="center">
             <template slot="header" slot-scope="scope">
               <span>Corresponding</span>
             </template>
-            <template slot-scope="scope">
-              <el-radio v-model="corresponding" disabled>Yes</el-radio>
+            <template scope="scope">
+              <el-radio
+                v-model="radio"
+                :label="scope.$index"
+                @change="getRow(scope.$index,scope.row)"
+              >Yes</el-radio>
             </template>
           </el-table-column>
           <el-table-column label="Order" align="center">
@@ -140,13 +144,13 @@
         <div class="author-list">Author List</div>
         <el-table
           ref="authorTable"
-          :data="select_author"
+          :data="author_list"
           tooltip-effect="dark"
           style="width: 100%"
           border
           align="center"
         >
-          <el-table-column prop="author_name" label="Order" align="center"></el-table-column>
+          <el-table-column type="index" label="Order" align="center" width="150"></el-table-column>
           <el-table-column prop="author_name" label="Name" align="center"></el-table-column>
           <el-table-column prop="author_affiliation" label="Affiliation" align="center"></el-table-column>
           <el-table-column prop="author_country" label="Country/Region" align="center"></el-table-column>
@@ -234,8 +238,9 @@ export default {
       select_author: [],
       abstract_id: "",
       country: [],
-      corresponding:'',
-      checked:''
+      corresponding: "",
+      checked: "",
+      radio:"1"
     };
   },
   methods: {
@@ -284,20 +289,6 @@ export default {
         this.body3 = true;
         this.body4 = false;
         this.body5 = false;
-        this.axios({
-          url: "/gaojian/index.php",
-          method: "post",
-          params: this.params({
-            act: "author_list",
-            p_id: sessionStorage.userId
-          })
-        })
-          .then(res => {
-            this.author_list = res.data.result;
-          })
-          .catch(err => {
-            console.log(err);
-          });
       } else {
         this.$message.warning("文件必传！");
         return false;
@@ -318,40 +309,16 @@ export default {
       if (this.form.author_name) {
         if (this.form.author_country) {
           if (this.form.author_affiliation) {
-            this.axios({
-              url: "/gaojian/index.php",
-              method: "post",
-              params: this.params({
-                act: "author_uploud",
-                author_name: this.form.author_name,
-                author_country: this.form.author_country,
-                author_affiliation: this.form.author_affiliation,
-                p_id: sessionStorage.userId
-              })
-            })
-              .then(res => {
-                if (res.data.code === 200) {
-                  this.$message.success(res.data.message);
-                  let author_info = res.data.result.info;
-                  this.author_list.push({
-                    author_name:
-                      author_info.first_name +
-                      author_info.middle_name +
-                      author_info.last_name,
-                    ...author_info
-                  });
-                  this.form.first_name = "";
-                  this.form.middle_name = "";
-                  this.form.last_name = "";
-                  this.form.author_country = "";
-                  this.form.author_affiliation = "";
-                } else {
-                  this.$message.warning(res.data.message);
-                }
-              })
-              .catch(err => {
-                console.log(err);
-              });
+            this.author_list.push({
+              author_name: this.form.author_name,
+              author_country: this.form.author_country,
+              author_affiliation: this.form.author_affiliation
+            });
+            this.form.first_name = "";
+            this.form.middle_name = "";
+            this.form.last_name = "";
+            this.form.author_country = "";
+            this.form.author_affiliation = "";
           } else {
             this.$message.warning("请输入affliation");
             return false;
@@ -366,8 +333,10 @@ export default {
       }
     },
     //选中作者的回调函数
-    handleCurrentChange(index,row) {
-      console.log(index)
+    getRow(index, row) {
+      console.log(row)
+      this.author_list[index].corresponding=true
+      console.log(this.author_list)
     },
     //该作者向前排序
     topAuthor(author_list, index) {
@@ -395,45 +364,17 @@ export default {
     },
     //删除该作者
     deleteAuthor(index, row) {
-      this.$confirm("此操作将永久删除该作者, 是否继续?", "提示", {
+      this.$confirm("此操作将删除该作者, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-          this.axios({
-            url: "/gaojian/index.php",
-            method: "post",
-            params: this.params({
-              act: "del_author",
-              id: row.author_id
-            })
-          })
-            .then(res => {
-              if (res.data.code === 200) {
-                this.$message.success(res.data.message);
-                this.axios({
-                  url: "/gaojian/index.php",
-                  method: "post",
-                  params: this.params({
-                    act: "author_list",
-                    p_id: sessionStorage.userId
-                  })
-                })
-                  .then(res => {
-                    this.author_list = res.data.result;
-                    this.$message.success("删除成功！");
-                  })
-                  .catch(err => {
-                    console.log(err);
-                  });
-              } else {
-                this.$message.warning(res.data.message);
-              }
-            })
-            .catch(err => {
-              console.log(err);
-            });
+          this.author_list.splice(index,1)
+          this.$message({
+            type: "success",
+            message: "已删除"
+          });
         })
         .catch(() => {
           this.$message({
@@ -444,14 +385,14 @@ export default {
     },
     //步骤3保存并跳转到步骤4
     saveAndContinue3() {
-      if (this.select_author.length == 0) {
-        this.$message.warning("请至少选择一位作者！");
+      if (this.author_list.length == 0) {
+        this.$message.warning("请至少添加一位作者！");
       } else {
-        this.body1 = false;
-        this.body2 = false;
-        this.body3 = false;
-        this.body4 = true;
-        this.body5 = false;
+      this.body1 = false;
+      this.body2 = false;
+      this.body3 = false;
+      this.body4 = true;
+      this.body5 = false;
       }
     },
     //步骤4返回步骤3
@@ -546,7 +487,6 @@ export default {
       })
     })
       .then(res => {
-        console.log(res);
         this.country = res.data.result;
       })
       .catch(err => {
