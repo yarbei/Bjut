@@ -65,12 +65,15 @@
         <img src="../assets/img/step3.png" alt>
         <div class="add-author">
           Add Author
-          <el-checkbox v-model="checked">Use My infomation</el-checkbox>
+          <el-checkbox @change="useMyInfomation" v-model="my_infomation">Use My infomation</el-checkbox>
         </div>
         <div
           class="note"
         >Please select if this is the corresponding author, Only one Corresponding Author is required.</div>
         <el-form ref="form" :model="form" label-width="150px">
+          <el-form-item label=" ">
+            <el-checkbox v-model="corresponding_author">Corresponding Author</el-checkbox>
+          </el-form-item>
           <el-form-item label="First Name" required>
             <el-input v-model="form.first_name"></el-input>
           </el-form-item>
@@ -111,7 +114,7 @@
             <template scope="scope">
               <el-radio
                 v-model="radio"
-                :label="scope.$index"
+                :label="scope.row.author_id"
                 @change="getRow(scope.$index,scope.row)"
               >Yes</el-radio>
             </template>
@@ -207,6 +210,7 @@
   </div>
 </template>
 <script>
+import { setTimeout } from "timers";
 export default {
   data() {
     return {
@@ -235,12 +239,11 @@ export default {
       body4: false,
       body5: false,
       fileList: [],
-      select_author: [],
       abstract_id: "",
       country: [],
-      corresponding: "",
-      checked: "",
-      radio:"1"
+      my_infomation: "1",
+      corresponding_author: 0,
+      radio: ""
     };
   },
   methods: {
@@ -302,23 +305,89 @@ export default {
       this.body4 = false;
       this.body5 = false;
     },
+    //使用用户信息
+    useMyInfomation() {
+      if (this.my_infomation) {
+        this.axios({
+          url: "/gaojian/index.php",
+          method: "post",
+          params: this.params({
+            act: "personnel_info",
+            p_id: sessionStorage.userId
+          })
+        })
+          .then(res => {
+            this.form.first_name = res.data.result.p_first_name;
+            this.form.middle_name = res.data.result.p_middle_name;
+            this.form.last_name = res.data.result.p_last_name;
+            this.form.author_country = res.data.result.p_country;
+            this.form.author_affiliation = res.data.result.p_affiliation;
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        this.form.first_name = "";
+        this.form.middle_name = "";
+        this.form.last_name = "";
+        this.form.author_country = "";
+        this.form.author_affiliation = "";
+      }
+    },
     //添加作者
     addAuthor() {
       this.form.author_name =
         this.form.first_name + this.form.middle_name + this.form.last_name;
+      let choose = 0;
+      if (this.corresponding_author == true) {
+        choose = 1;
+      } else {
+        choose = 0;
+      }
       if (this.form.author_name) {
         if (this.form.author_country) {
           if (this.form.author_affiliation) {
-            this.author_list.push({
-              author_name: this.form.author_name,
-              author_country: this.form.author_country,
-              author_affiliation: this.form.author_affiliation
-            });
-            this.form.first_name = "";
-            this.form.middle_name = "";
-            this.form.last_name = "";
-            this.form.author_country = "";
-            this.form.author_affiliation = "";
+            this.axios({
+              url: "/gaojian/index.php",
+              method: "post",
+              params: this.params({
+                act: "author_uploud",
+                author_name: this.form.author_name,
+                author_country: this.form.author_country,
+                author_affiliation: this.form.author_affiliation,
+                p_id: sessionStorage.userId,
+                choose: choose
+              })
+            })
+              .then(res => {
+                if (res.data.code === 200) {
+                  this.$message.success(res.data.message);
+                  let author_info = res.data.result.info;
+                  this.author_list.push({
+                    author_name:
+                      author_info.first_name +
+                      author_info.middle_name +
+                      author_info.last_name,
+                    ...author_info
+                  });
+                  this.author_list.forEach(item => {
+                    if (item.choose == true) {
+                      this.radio = item.author_id;
+                    }
+                  });
+                  this.corresponding_author = 0;
+                  this.form.first_name = "";
+                  this.form.middle_name = "";
+                  this.form.last_name = "";
+                  this.form.author_country = "";
+                  this.form.author_affiliation = "";
+                } else {
+                  this.$message.warning(res.data.message);
+                }
+              })
+              .catch(err => {
+                console.log(err);
+              });
           } else {
             this.$message.warning("请输入affliation");
             return false;
@@ -334,9 +403,14 @@ export default {
     },
     //选中作者的回调函数
     getRow(index, row) {
-      console.log(row)
-      this.author_list[index].corresponding=true
-      console.log(this.author_list)
+      this.author_list.forEach(item => {
+        item.choose = false;
+      });
+      this.author_list[index].choose = true;
+      // let select_author=row
+      // this.author_list.splice(index,1)
+      // this.author_list.unshift(select_author)
+      // console.log(this.author_list)
     },
     //该作者向前排序
     topAuthor(author_list, index) {
@@ -364,17 +438,45 @@ export default {
     },
     //删除该作者
     deleteAuthor(index, row) {
-      this.$confirm("此操作将删除该作者, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除该作者, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-          this.author_list.splice(index,1)
-          this.$message({
-            type: "success",
-            message: "已删除"
-          });
+          this.axios({
+            url: "/gaojian/index.php",
+            method: "post",
+            params: this.params({
+              act: "del_author",
+              id: row.author_id
+            })
+          })
+            .then(res => {
+              if (res.data.code === 200) {
+                this.$message.success(res.data.message);
+                this.axios({
+                  url: "/gaojian/index.php",
+                  method: "post",
+                  params: this.params({
+                    act: "author_list",
+                    p_id: sessionStorage.userId
+                  })
+                })
+                  .then(res => {
+                    this.author_list = res.data.result;
+                    this.$message.success("删除成功！");
+                  })
+                  .catch(err => {
+                    console.log(err);
+                  });
+              } else {
+                this.$message.warning(res.data.message);
+              }
+            })
+            .catch(err => {
+              console.log(err);
+            });
         })
         .catch(() => {
           this.$message({
@@ -388,11 +490,11 @@ export default {
       if (this.author_list.length == 0) {
         this.$message.warning("请至少添加一位作者！");
       } else {
-      this.body1 = false;
-      this.body2 = false;
-      this.body3 = false;
-      this.body4 = true;
-      this.body5 = false;
+        this.body1 = false;
+        this.body2 = false;
+        this.body3 = false;
+        this.body4 = true;
+        this.body5 = false;
       }
     },
     //步骤4返回步骤3
@@ -410,8 +512,14 @@ export default {
     //提交数据
     submit() {
       let a_id = [];
-      this.select_author.forEach(item => {
+      this.author_list.forEach(item => {
         a_id.push(item.author_id);
+      });
+      this.author_list.forEach(item => {
+        if (item.choose == true) {
+          a_id.unshift(item.author_id);
+          a_id.splice(item, 1);
+        }
       });
       this.axios({
         url: "/gaojian/index.php",
@@ -430,12 +538,15 @@ export default {
       })
         .then(res => {
           if (res.data.code === 200) {
+            this.$message.success("提交成功！即将跳转");
             this.abstract_id = res.data.result.info.number;
-            this.body1 = false;
-            this.body2 = false;
-            this.body3 = false;
-            this.body4 = false;
-            this.body5 = true;
+            setTimeout(() => {
+              this.body1 = false;
+              this.body2 = false;
+              this.body3 = false;
+              this.body4 = false;
+              this.body5 = true;
+            }, 2000);
           } else {
             this.$message.warning("提交失败！");
           }
@@ -662,6 +773,10 @@ export default {
     }
   }
   .body3 {
+    .note{
+      background: #f7eae9;
+      color: #b22f29;
+    }
     .el-table {
       width: 100%;
       border: 1px solid #eaeaea;
