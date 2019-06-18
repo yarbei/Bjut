@@ -57,7 +57,7 @@ export default {
     justify-content: space-between;
     align-items: flex-start;
     .content {
-      min-height: 100vh;
+      min-height: 50vh;
       p.copyright {
         width: 910px;
         height: 60px;
