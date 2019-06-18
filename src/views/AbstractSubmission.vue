@@ -490,11 +490,17 @@ export default {
       if (this.author_list.length == 0) {
         this.$message.warning("请至少添加一位作者！");
       } else {
-        this.body1 = false;
-        this.body2 = false;
-        this.body3 = false;
-        this.body4 = true;
-        this.body5 = false;
+        this.author_list.forEach(item => {
+          if (item.choose == true) {
+            this.body1 = false;
+            this.body2 = false;
+            this.body3 = false;
+            this.body4 = true;
+            this.body5 = false;
+          } else {
+            this.$message.warning("请选择一位联系作者！");
+          }
+        });
       }
     },
     //步骤4返回步骤3
@@ -511,6 +517,7 @@ export default {
     },
     //提交数据
     submit() {
+      this.$loading()
       let a_id = [];
       this.author_list.forEach(item => {
         a_id.push(item.author_id);
@@ -538,15 +545,13 @@ export default {
       })
         .then(res => {
           if (res.data.code === 200) {
-            this.$message.success("提交成功！即将跳转");
+            this.$loading().close()
             this.abstract_id = res.data.result.info.number;
-            setTimeout(() => {
-              this.body1 = false;
-              this.body2 = false;
-              this.body3 = false;
-              this.body4 = false;
-              this.body5 = true;
-            }, 2000);
+            this.body1 = false;
+            this.body2 = false;
+            this.body3 = false;
+            this.body4 = false;
+            this.body5 = true;
           } else {
             this.$message.warning("提交失败！");
           }
@@ -773,7 +778,7 @@ export default {
     }
   }
   .body3 {
-    .note{
+    .note {
       background: #f7eae9;
       color: #b22f29;
     }
@@ -807,13 +812,13 @@ export default {
     }
     table {
       width: 100%;
-      border: 1px solid #eaeaea;
       margin-top: 20px;
       tr td {
         height: 64px;
         text-align: center;
         color: #444;
         font-size: 16px;
+        border: 1px solid #eaeaea;
       }
       tr:first-child {
         font-weight: 700;
