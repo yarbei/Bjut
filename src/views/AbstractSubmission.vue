@@ -65,14 +65,15 @@
         <img src="../assets/img/step3.png" alt>
         <div class="add-author">
           Add Author
-          <el-checkbox @change="useMyInfomation" v-model="my_infomation">Use My infomation</el-checkbox>
+          <!-- <el-checkbox @change="useMyInfomation" v-model="my_infomation">Use My infomation</el-checkbox> -->
         </div>
         <div
           class="note"
         >Please select if this is the corresponding author, Only one Corresponding Author is required.</div>
         <el-form ref="form" :model="form" label-width="150px">
           <el-form-item label=" ">
-            <el-checkbox v-model="corresponding_author">Corresponding Author</el-checkbox>
+            <!-- <el-checkbox v-model="corresponding_author">Corresponding Author</el-checkbox> -->
+            <el-checkbox @change="useMyInfomation" v-model="my_infomation">Use My infomation</el-checkbox>
           </el-form-item>
           <el-form-item label="First Name" required>
             <el-input v-model="form.first_name"></el-input>
@@ -107,7 +108,7 @@
           <el-table-column prop="author_name" label="Name" align="center"></el-table-column>
           <el-table-column prop="author_country" label="Country/Region" align="center"></el-table-column>
           <el-table-column prop="author_affiliation" label="Affiliation" align="center"></el-table-column>
-          <el-table-column label="Corresponding" align="center">
+          <el-table-column label="Corresponding Author" align="center">
             <template slot="header" slot-scope="scope">
               <span>Corresponding</span>
             </template>
@@ -217,7 +218,8 @@ export default {
       head: this.$route.matched[this.$route.matched.length - 1].meta.title,
       filed: "/gaojian/index.php",
       act: this.params({
-        act: "upload_file"
+        act: "upload_file",
+        email:sessionStorage.userEmail
       }),
       form: {
         paper_title: "",
@@ -636,6 +638,7 @@ export default {
       color: #fefefe;
       border: 0;
       margin: 20px auto;
+      font-size: 16px;
     }
     p {
       font-family: ArialMT;
@@ -815,6 +818,9 @@ export default {
         color: #444;
         font-size: 16px;
         border: 1px solid #eaeaea;
+        text-align: left;
+        padding: 20px;
+        box-sizing: border-box;
       }
       tr:first-child {
         font-weight: 700;
@@ -841,7 +847,6 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-left: 20px;
       }
     }
     .note {

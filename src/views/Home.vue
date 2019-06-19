@@ -88,7 +88,7 @@ export default {
   methods: {
     toLoginOrUserCenter() {
       if (sessionStorage.userId && sessionStorage.userEmail) {
-        this.$router.push({ path: "/userCenter?id=8" });
+        this.$router.push({ path: "/userCenter" });
       } else {
         this.$router.push({ path: "/login" });
       }
@@ -198,7 +198,7 @@ export default {
       .time {
         font-size: 16px;
         font-family: 黑体;
-        color: #727272;
+        color: #000;
       }
     }
   }

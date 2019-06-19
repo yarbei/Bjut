@@ -58,6 +58,9 @@ export default {
     align-items: flex-start;
     .content {
       min-height: 50vh;
+      input,textarea{
+        border:1px solid #666 !important;
+      }
       p.copyright {
         width: 910px;
         height: 60px;

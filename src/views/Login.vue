@@ -173,13 +173,13 @@ export default {
           })
             .then(res => {
               if (res.data.result.p_first_name) {
-                this.$router.push({ path: "/userCenter?id=8" });
+                this.$router.push({ path: "/userCenter" });
               } else {
                 this.$alert(
                   "您还没有完善个人信息，请先完善个人信息！点击确定前往个人信息页面!",
                   "提示"
                 ).then(() => {
-                  this.$router.push({ path: "/userInfo?id=8" });
+                  this.$router.push({ path: "/userInfo" });
                 });
               }
             })

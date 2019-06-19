@@ -71,13 +71,13 @@ export default {
         })
           .then(res => {
             if (res.data.result.p_first_name) {
-              this.$router.push({ path: "/abstractSubmission?id=9" });
+              this.$router.push({ path: "/abstractSubmission" });
             } else {
               this.$alert(
                 "您还没有完善个人信息，请先完善个人信息！点击确定前往个人信息页面!",
                 "提示"
               ).then(() => {
-                this.$router.push({ path: "/userInfo?id=8" });
+                this.$router.push({ path: "/userInfo" });
               });
             }
           })
@@ -100,13 +100,13 @@ export default {
         })
           .then(res => {
             if (res.data.result.Ab_LIST.length != 0) {
-              this.$router.push({ path: "/fullpaper?id=9" });
+              this.$router.push({ path: "/fullpaper" });
             } else {
               this.$alert(
                 "您还没有上传摘要，请先上传摘要！点击确定前往上传摘要页面!",
                 "提示"
               ).then(() => {
-                this.$router.push({ path: "/abstractSubmission?id=9" });
+                this.$router.push({ path: "/abstractSubmission" });
               });
             }
           })

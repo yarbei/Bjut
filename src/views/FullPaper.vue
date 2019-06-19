@@ -37,6 +37,8 @@
             <br>
             <a href class="el-icon-download">Abstract Template.doc</a>
           </p>
+          <p class="up">
+          <span>*Extend Abstract</span>
           <el-upload
             class="upload-demo"
             :action="filed"
@@ -47,8 +49,9 @@
             :file-list="fileList"
             :data="act"
           >
-            <el-button size="small" type="primary">Extend Abstract</el-button>
+            <el-button class="el-icon-upload" size="small" type="primary">Upload Full-Paper </el-button>
           </el-upload>
+          </p>
         </div>
         <div class="button-box">
           <button class="return" @click="returnStep1">Return</button>
@@ -68,7 +71,7 @@
           <br>If you have questions, please contact the conference group isrerm2020@bjut.edu.cn
           <br>Thank you.
         </p>
-        <button @click="backToUserCenter">Back to User Center</button>
+        <button class="back-to-usercenter" @click="backToUserCenter">Back to User Center</button>
       </div>
     </div>
   </div>
@@ -80,7 +83,8 @@ export default {
       head: this.$route.matched[this.$route.matched.length - 1].meta.title,
       filed: "/gaojian/index.php",
       act: this.params({
-        act: "upload_file"
+        act: "upload_file",
+        email:sessionStorage.userEmail
       }),
       form: {
         paper_title: "",
@@ -202,19 +206,35 @@ export default {
     width: 100%;
     padding: 20px;
     box-sizing: border-box;
+    .back-to-usercenter{
+      margin: 0 auto;
+      background: #2793c5;
+    }
     button {
       display: flex;
       padding: 15px 40px;
       box-sizing: border-box;
-      background: #2aace8;
+      background: #b22f29;
       color: #fefefe;
       border: 0;
-      margin: 20px auto;
+      margin: 20px;
+      font-size: 16px;
     }
     p {
       font-family: ArialMT;
       font-size: 16px;
       color: #444;
+    }
+    p.up {
+      display: flex;
+      align-items: center;
+      span {
+        font-family: ArialMT;
+        font-size: 16px;
+        line-height: 32px;
+        letter-spacing: 0px;
+        color: #444444;
+      }
     }
     .note {
       padding: 15px 20px;
@@ -263,7 +283,7 @@ export default {
         color: #fff;
         font-family: ArialMT;
         font-size: 16px;
-        background: #b22f29;
+        background: #2793c5;
         border: 0;
         margin: 0 12px;
         cursor: pointer;
@@ -285,6 +305,9 @@ export default {
         font-size: 16px;
         color: #444444;
         line-height: 32px;
+        a{
+          color: #444;
+        }
       }
     }
   }

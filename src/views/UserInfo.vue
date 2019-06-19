@@ -236,10 +236,10 @@ export default {
         })
       }).then(res => {
         if (res.data.code === 200) {
-          this.$message.success("提交成功！即将前往首页！");
-          setTimeout(() => {
-            this.$router.push({ path: "/" });
-          }, 3000);
+          this.$message.success("提交成功!");
+          // setTimeout(() => {
+          //   this.$router.push({ path: "/" });
+          // }, 3000);
         }else{
           this.$message.warning(res.data.message);
         }

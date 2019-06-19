@@ -35,7 +35,7 @@ export default {
       this.$router.push({path:'/modifypassword?id=9'})
     },
     toUserCenter(){
-      this.$router.push({path:'/userCenter?id=8'})
+      this.$router.push({path:'/userCenter'})
     },
     logout(){
       sessionStorage.userId='';

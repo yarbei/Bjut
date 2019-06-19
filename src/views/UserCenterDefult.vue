@@ -92,7 +92,7 @@ export default {
   methods: {
     //点击跳转修改个人信息页面
     modifyUserInfo() {
-      this.$router.push({ path: "/userInfo?id=8" });
+      this.$router.push({ path: "/userInfo" });
     },
     //点击按钮跳转AbstractSubmission
     toAbstractSubmission() {
@@ -103,7 +103,7 @@ export default {
           "您还没有完善个人信息，请先完善个人信息！点击确定前往个人信息页面!",
           "提示"
         ).then(() => {
-          this.$router.push({ path: "/userInfo?id=8" });
+          this.$router.push({ path: "/userInfo" });
         });
       }
     },
