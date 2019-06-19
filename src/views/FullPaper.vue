@@ -127,6 +127,7 @@ export default {
     //步骤2上传数据
     saveAndContinue2() {
       if (this.form.file) {
+        this.$loading();
         this.axios({
           url: "/gaojian/index.php",
           method: "post",
@@ -142,6 +143,7 @@ export default {
         })
           .then(res => {
             if (res.data.code == 200) {
+              this.$loading().close();
               this.full_id = res.data.result.info.number;
               this.body1 = false;
               this.body2 = false;

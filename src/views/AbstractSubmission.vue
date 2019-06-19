@@ -407,10 +407,6 @@ export default {
         item.choose = false;
       });
       this.author_list[index].choose = true;
-      // let select_author=row
-      // this.author_list.splice(index,1)
-      // this.author_list.unshift(select_author)
-      // console.log(this.author_list)
     },
     //该作者向前排序
     topAuthor(author_list, index) {
@@ -517,7 +513,7 @@ export default {
     },
     //提交数据
     submit() {
-      this.$loading()
+      this.$loading();
       let a_id = [];
       this.author_list.forEach(item => {
         a_id.push(item.author_id);
@@ -545,7 +541,7 @@ export default {
       })
         .then(res => {
           if (res.data.code === 200) {
-            this.$loading().close()
+            this.$loading().close();
             this.abstract_id = res.data.result.info.number;
             this.body1 = false;
             this.body2 = false;

@@ -158,7 +158,7 @@ template {
   clear: both;
 }
 body{
-  background: url('../img/bg.png') no-repeat center /cover;
+  background: url('../img/bg.png');
 }
 .container{
   width: 1200px;
