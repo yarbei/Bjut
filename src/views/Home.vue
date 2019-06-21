@@ -4,6 +4,11 @@
       <el-carousel-item v-for="item in data.Wheel_planting" :key="item.id">
         <img :src="item.img" alt>
       </el-carousel-item>
+      <div class="word">
+        <h1>ISRERM2020</h1>
+        <p>7th International Symposium on Reliability Engineering and Risk Management</p>
+        <p>Jun. 5-7, 2020 | Beijing, China.</p>
+      </div>
     </el-carousel>
     <div class="content">
       <div class="left">
@@ -29,7 +34,7 @@
               <router-link :to="'/article?id='+item.id">
                 <div class="head">
                   <span>{{item.title}}</span>
-                  <span class="time">{{item.time}}</span>
+                  <!-- <span class="time">{{item.time}}</span> -->
                 </div>
                 <div class="des">{{item.des}}</div>
               </router-link>
@@ -93,8 +98,8 @@ export default {
         this.$router.push({ path: "/login" });
       }
     },
-    toAddress(){
-      this.$router.push({path:'/article?id=6'})
+    toAddress() {
+      this.$router.push({ path: "/article?id=6" });
     }
   },
   created() {
@@ -120,6 +125,37 @@ export default {
 <style lang="less" scoped>
 .el-carousel {
   width: 940px;
+  position: relative;
+  .word {
+    width: 100%;
+    height: 170px;
+    position: absolute;
+    bottom: 0;
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px 30px;
+    box-sizing: border-box;
+    font-weight: 600;
+    h1 {
+      font-family: Arial-BoldMT;
+      font-size: 30px;
+      font-weight: normal;
+      font-stretch: normal;
+      line-height: 50px;
+      letter-spacing: 0px;
+      color: #ffffff;
+    }
+    p {
+      font-family: Arial-BoldMT;
+      font-size: 22px;
+      font-weight: normal;
+      font-stretch: normal;
+      line-height: 32px;
+      letter-spacing: 0px;
+      color: #ffffff;
+      margin-top: 2px;
+    }
+  }
   img {
     width: 100%;
   }
@@ -196,8 +232,7 @@ export default {
         color: #000;
       }
       .time {
-        font-size: 16px;
-        font-family: 黑体;
+        font-size: 18px;
         color: #000;
       }
     }
@@ -218,6 +253,7 @@ export default {
       height: 400px;
       margin-top: 30px;
       ul li /deep/ a {
+        width: 100%;
         flex-direction: column;
         .head {
           width: 100%;

@@ -3,11 +3,10 @@
     <div class="info-box">
       <div class="head">Personal information</div>
       <div class="body">
-        <p>{{userInfo.p_first_name}}</p>
-        <p>Affiliation:{{userInfo.p_affiliation}}</p>
-        <p>Tel:{{userInfo.p_phone}}</p>
-        <p>Email:{{userInfo.p_email}}</p>
-        <p>Add: {{userInfo.p_address}}</p>
+        <p>{{userInfo.p_title}}&nbsp;{{userInfo.p_first_name}}&nbsp;{{userInfo.p_last_name}}</p>
+        <p>Affiliation: {{userInfo.p_affiliation}}</p>
+        <p>Email: {{userInfo.p_email}}</p>
+        <p>Address: {{userInfo.p_address}}</p>
         <button @click="modifyUserInfo">Modify</button>
       </div>
     </div>
@@ -28,7 +27,7 @@
             </td>
           </tr>
         </table>
-        <button @click="toAbstractSubmission">Submit a new Abstract</button>
+        <button @click="toAbstractSubmission">Submit a Abstract</button>
       </div>
     </div>
     <div class="info-box">
@@ -48,11 +47,11 @@
             </td>
           </tr>
         </table>
-        <button @click="toFullPaper">Submit a new Full-Paper</button>
+        <button @click="toFullPaper">Submit a Full Paper</button>
       </div>
     </div>
     <div class="info-box">
-      <div class="head">Participation</div>
+      <div class="head">Registration Information</div>
       <div class="body">
         <table class="table3" border="1">
           <tr>
@@ -60,12 +59,12 @@
             <td>{{Participation.registration_fee}}</td>
           </tr>
           <tr>
-            <td>Hotel reservation</td>
+            <td>Accommodation reservation</td>
             <td>{{Participation.hotel}}</td>
           </tr>
           <tr>
-            <td>Participate tour visit</td>
-            <td>Yes/No</td>
+            <td>Tour visit</td>
+            <td></td>
           </tr>
         </table>
         <a class="button" :href="Participation.url_now">Registration now</a>

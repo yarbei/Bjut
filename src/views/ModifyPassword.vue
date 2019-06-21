@@ -52,9 +52,9 @@ export default {
             })
         }).then(res=>{
             if(res.data.code===200){
-                this.$message.success(res.data.message)
+                this.$message.success('Modify successfully')
             }else{
-                this.$message.error('修改失败！')
+                this.$message.error('Modify unsuccessfully')
             }
         }).catch(err=>{
             console.log(err)

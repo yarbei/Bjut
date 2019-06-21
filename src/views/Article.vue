@@ -6,24 +6,6 @@
         <h1 class="title">{{article.title}}</h1>
         <div class="content">
           <div v-html="article.content" v-show="isArticle"></div>
-          <div class="committee" v-show="committee">
-            <div class="table" v-for="item in committeeList" :key="item.c_id">
-              <h1>{{item.c_name}}</h1>
-              <table>
-                <tr v-for="i in item.member_list" :key="i.m_cid">
-                  <td>
-                    <span>{{i.m_key}}</span>
-                  </td>
-                  <td>
-                    <p v-for="j in i.m_value_a" :key="j.name">
-                      <span>{{j.name}}</span>
-                      <span>{{j.school}}</span>
-                    </p>
-                  </td>
-                </tr>
-              </table>
-            </div>
-          </div>
           <div class="submission" v-show="submission">
             <div v-html="article.content"></div>
             <button
@@ -123,23 +105,6 @@ export default {
     if (id == 9) {
       this.isArticle = false;
       this.submission = true;
-    }
-    if (id == 13) {
-      this.isArticle = false;
-      this.axios({
-        url: "/gaojian/index.php",
-        method: "post",
-        params: this.params({
-          act: "committee"
-        })
-      })
-        .then(res => {
-          this.committeeList = res.data.result;
-        })
-        .catch(err => {
-          console.log(err);
-        });
-      this.committee = true;
     }
     this.axios({
       method: "post",

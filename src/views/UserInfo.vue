@@ -30,19 +30,22 @@
           <el-form-item label="Gender" prop="p_gender">
             <el-radio-group v-model="ruleForm.p_gender">
               <el-radio label="1">Male</el-radio>
-              <el-radio label="0">Famale</el-radio>
+              <el-radio label="2">Famale</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="Student" prop="p_student">
             <el-radio-group v-model="ruleForm.p_student">
               <el-radio label="1">Yes</el-radio>
-              <el-radio label="0">No</el-radio>
+              <el-radio label="2">No</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="Title" prop="p_title">
-            <el-select v-model="ruleForm.p_title" placeholder>
-              <el-option value="title1"></el-option>
-              <el-option value="title2"></el-option>
+            <el-select v-model="ruleForm.p_title" placeholder="--Please Choose--">
+              <el-option value="Prof."></el-option>
+              <el-option value="Dr."></el-option>
+              <el-option value="Mr."></el-option>
+              <el-option value="Mrs."></el-option>
+              <el-option value="Ms."></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="Affiliation" prop="p_affiliation">
@@ -88,7 +91,7 @@
           </el-form-item>
         </el-form>
         <div class="button-box">
-          <button class="return" @click="backToUserCenter">Return</button>
+          <button class="return" @click="backToUserCenter">Back</button>
           <button v-show="isInfo" @click="subUserInfo">Confirm</button>
           <button v-show="isNotInfo" @click="resetForm">Save</button>
           <button v-show="isNotInfo" @click="subUserInfo">Submit</button>
@@ -140,7 +143,7 @@ export default {
         p_first_name: [
           {
             required: true,
-            message: "请输入firstName",
+            message: "Please input First Name",
             trigger: ["blur", "change"]
           }
         ],
@@ -148,28 +151,28 @@ export default {
         p_last_name: [
           {
             required: true,
-            message: "请输入lasttName",
+            message: "Please input Last Name",
             trigger: ["blur", "change"]
           }
         ],
         p_student: [
           {
             required: true,
-            message: "请选择Yes or No",
+            message: "Please choose Yes or No",
             trigger: ["blur", "change"]
           }
         ],
         p_title: [
           {
             required: true,
-            message: "请选择title",
+            message: "Please choose Title",
             trigger: ["blur", "change"]
           }
         ],
         p_affiliation: [
           {
             required: true,
-            message: "请输入firstName",
+            message: "Please input Affiliation",
             trigger: ["blur", "change"]
           }
         ],
@@ -177,25 +180,25 @@ export default {
         p_country: [
           {
             required: true,
-            message: "请选择countryRegion",
+            message: "Please choose Country/Region",
             trigger: ["blur", "change"]
           }
         ],
         p_province: [],
         p_city: [
-          { required: true, message: "请输入city", trigger: ["blur", "change"] }
+          { required: true, message: "Please input City", trigger: ["blur", "change"] }
         ],
         p_zip: [
           {
             required: true,
-            message: "请输入zipPostalCode",
+            message: "Please input Zip/Postal Code",
             trigger: ["blur", "change"]
           }
         ],
         p_address: [
           {
             required: true,
-            message: "请输入address",
+            message: "Please input Address",
             trigger: ["blur", "change"]
           }
         ]
@@ -223,12 +226,12 @@ export default {
         })
       }).then(res => {
         if (res.data.code === 200) {
-          this.$message.success("提交成功!");
-          // setTimeout(() => {
-          //   this.$router.push({ path: "/" });
-          // }, 3000);
+          this.$message.success("Confirmed! Now go to User Center.");
+          setTimeout(() => {
+            this.$router.push({ path: "/userCenter" });
+          }, 3000);
         }else{
-          this.$message.warning(res.data.message);
+          this.$message.warning('Error! Please confirm your information.');
         }
       });
     },
@@ -280,7 +283,7 @@ export default {
           this.isInfo = false;
           this.isNotInfo = true;
           this.noet =
-            "Note:This information will be used to generate your name badge and for all emailings, so please complete all fields accurately.";
+            "Note:This information will be used to generate your name badge and for all emailings.";
         } else {
           this.isInfo = true;
           this.isNotInfo = false;

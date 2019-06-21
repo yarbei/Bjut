@@ -8,7 +8,7 @@
           class="note"
         >Choose the proper topic for this abstract from the "Topic" below. It is extremely important that you properly categorize your abstract so that it will go to the appropriate review group.</div>
         <el-form ref="form" :model="form" label-width="170px">
-          <el-form-item label="Paper Title:" required>
+          <el-form-item label="Title:" required>
             <el-input v-model="form.paper_title"></el-input>
           </el-form-item>
           <el-form-item label="Topic" required>
@@ -24,24 +24,22 @@
           </el-form-item>
         </el-form>
         <div class="button-box">
-          <button class="return" @click="backToUserCenter">Return</button>
+          <button class="return" @click="backToUserCenter">Back</button>
           <button @click="saveAndContinue('form')">Save and Continue</button>
         </div>
       </div>
       <div class="body body2" v-show="body2">
         <img src="../assets/img/step2.png" alt>
-        <div class="note">Upload Extend Abstract:</div>
+        <div class="note">Upload Abstract:</div>
         <div class="upload">
           <p>
-            Upload Notes:
+            Notes:
             <br>(1) Only original and unpublished works are invited.
-            <br>(2) All full-paper must be submitted in English.
-            <br>(3) All full-paper should be submitted no later than Aug. 31, 2019, via email to the secretariat isrerm2020@bjut.edu.cn.
-            <br>(4) The symposium will only call for Oral presentation.
-            <br>(5) Corresponding author will receive all correspondence concerning the submission and is responsible for informing the other authors of the status of the submission.
+            <br>(2) Abstract must be submitted in English.
+            <br>(3) Abstract must be prepared with the following Templete.
           </p>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../template/Abstract Template.doc" download="" class="el-icon-download">Abstract Template.doc</a>
           <p class="up">
-            <span>*Extend Abstract</span>
             <el-upload
               class="upload-demo"
               :action="filed"
@@ -52,12 +50,12 @@
               :file-list="fileList"
               :data="act"
             >
-              <el-button size="small" type="primary">Extend Abstract</el-button>
+              <el-button class="el-icon-upload" size="small" type="primary">Upload</el-button>
             </el-upload>
           </p>
         </div>
         <div class="button-box">
-          <button class="return" @click="returnStep1">Return</button>
+          <button class="return" @click="returnStep1">Back</button>
           <button @click="saveAndContinue2">Save and Continue</button>
         </div>
       </div>
@@ -69,11 +67,11 @@
         </div>
         <div
           class="note"
-        >Please select if this is the corresponding author, Only one Corresponding Author is required.</div>
+        >Please choose a corresponding author before "Save and Continue".</div>
         <el-form ref="form" :model="form" label-width="150px">
           <el-form-item label=" ">
             <!-- <el-checkbox v-model="corresponding_author">Corresponding Author</el-checkbox> -->
-            <el-checkbox @change="useMyInfomation" v-model="my_infomation">Use My infomation</el-checkbox>
+            <el-checkbox @change="useMyInfomation" v-model="my_infomation">Extract account information</el-checkbox>
           </el-form-item>
           <el-form-item label="First Name" required>
             <el-input v-model="form.first_name"></el-input>
@@ -93,7 +91,7 @@
             <el-input v-model="form.author_affiliation"></el-input>
           </el-form-item>
         </el-form>
-        <button @click="addAuthor">Save and Continue</button>
+        <button @click="addAuthor">Add</button>
         <div class="author-list">Author List</div>
         <el-table
           ref="authorTable"
@@ -110,7 +108,7 @@
           <el-table-column prop="author_affiliation" label="Affiliation" align="center"></el-table-column>
           <el-table-column label="Corresponding Author" align="center">
             <template slot="header" slot-scope="scope">
-              <span>Corresponding</span>
+              <span>Corresponding<br>Author</span>
             </template>
             <template scope="scope">
               <el-radio
@@ -131,21 +129,21 @@
           </el-table-column>
           <el-table-column label="Manage" align="center">
             <template slot="header" slot-scope="scope">
-              <span>Manage</span>
+              <span>Operation</span>
             </template>
             <template slot-scope="scope">
-              <i class="el-icon-delete" @click="deleteAuthor(scope.$index, scope.row)">Delete</i>
+              <i class="el-icon-delete" @click="deleteAuthor(scope.$index, scope.row)">&nbsp;Delete</i>
             </template>
           </el-table-column>
         </el-table>
         <div class="button-box">
-          <button class="return" @click="returnStep2">Return</button>
+          <button class="return" @click="returnStep2">Back</button>
           <button @click="saveAndContinue3">Save and Continue</button>
         </div>
       </div>
       <div class="body body4" v-show="body4">
         <img src="../assets/img/step4.png" alt>
-        <div class="author-list">Author List</div>
+        <div class="author-list">Review</div>
         <el-table
           ref="authorTable"
           :data="author_list"
@@ -159,7 +157,6 @@
           <el-table-column prop="author_affiliation" label="Affiliation" align="center"></el-table-column>
           <el-table-column prop="author_country" label="Country/Region" align="center"></el-table-column>
         </el-table>
-        <div class="abstract-info">Abstract Information</div>
         <table class="table2" border="1">
           <tr>
             <td>Abstract Title</td>
@@ -176,19 +173,17 @@
           <tr>
             <td>Abstract File</td>
             <td>
-              <a :download="form.file" :href="form.file" class="download el-icon-download">Download</a>
+              <a download="" :href="form.file" class="download el-icon-download">&nbsp;&nbsp;Download</a>
             </td>
           </tr>
         </table>
         <div class="note">
-          Before you submit your abstract:
-          <br>(1) Please carefully check your abstract and your personal information;
-          <br>(2) Cannot be modified after submission;
-          <br>(3) If you want to modify the body of abstract, please click "Return" button.
-          <br>
+          Note:
+          <br>(1) Please carefully check your abstract and author information;
+          <br>(2) Cannot be modified after submission.
         </div>
         <div class="button-box">
-          <button class="return" @click="returnStep3">Return</button>
+          <button class="return" @click="returnStep3">Back</button>
           <button @click="submit">Submit</button>
         </div>
       </div>
@@ -198,11 +193,11 @@
           <span>{{abstract_id}}</span>
         </h1>
         <p>
-          A confirmation email with important information concerning your full-paper has been sent to your email address as following:
-          <br>If you do not receive a confirmation email within the next few hours, please:
-          <br>• Make sure the email address listed above are correct and valid
+          A confirmation email will be sent to your email address.
+          <br>If you do not receive the confirmation email, please:
+          <br>• Make sure your email address is correct and valid
           <br>• Check your junk mail or spam folder to make sure it did not end up there by accident
-          <br>If you have questions, please contact the conference group isrerm2020@bjut.edu.cn
+          <br>If you have questions, please contact the secretariat via isrerm2020@gmail.com,
           <br>Thank you.
         </p>
         <button @click="backToUserCenter">Back to User Center</button>
@@ -266,15 +261,15 @@ export default {
             this.body4 = false;
             this.body5 = false;
           } else {
-            this.$message.warning("abstract必填！");
+            this.$message.warning("Please input Abstract！");
             return false;
           }
         } else {
-          this.$message.warning("topic必选！");
+          this.$message.warning("Please select a topic！");
           return false;
         }
       } else {
-        this.$message.warning("paper_title必填！");
+        this.$message.warning("Please input Title！");
         return false;
       }
     },
@@ -295,7 +290,7 @@ export default {
         this.body4 = false;
         this.body5 = false;
       } else {
-        this.$message.warning("文件必传！");
+        this.$message.warning("File is required.");
         return false;
       }
     },
@@ -339,7 +334,7 @@ export default {
     //添加作者
     addAuthor() {
       this.form.author_name =
-        this.form.first_name + this.form.middle_name + this.form.last_name;
+        this.form.first_name +' ' + this.form.middle_name +' ' + this.form.last_name;
       let choose = 0;
       if (this.corresponding_author == true) {
         choose = 1;
@@ -363,7 +358,7 @@ export default {
             })
               .then(res => {
                 if (res.data.code === 200) {
-                  this.$message.success(res.data.message);
+                  this.$message.success('Successfully');
                   let author_info = res.data.result.info;
                   this.author_list.push({
                     author_name:
@@ -377,7 +372,7 @@ export default {
                       this.radio = item.author_id;
                     }
                   });
-                  this.corresponding_author = 0;
+                  this.my_infomation = 0;
                   this.form.first_name = "";
                   this.form.middle_name = "";
                   this.form.last_name = "";
@@ -391,15 +386,15 @@ export default {
                 console.log(err);
               });
           } else {
-            this.$message.warning("请输入affliation");
+            this.$message.warning("Please input Affliation");
             return false;
           }
         } else {
-          this.$message.warning("请输入country");
+          this.$message.warning("Please choose Country/Region");
           return false;
         }
       } else {
-        this.$message.warning("请输入name");
+        this.$message.warning("Please input Name");
         return false;
       }
     },
@@ -436,57 +431,12 @@ export default {
     },
     //删除该作者
     deleteAuthor(index, row) {
-      this.$confirm("此操作将永久删除该作者, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.axios({
-            url: "/gaojian/index.php",
-            method: "post",
-            params: this.params({
-              act: "del_author",
-              id: row.author_id
-            })
-          })
-            .then(res => {
-              if (res.data.code === 200) {
-                this.$message.success(res.data.message);
-                this.axios({
-                  url: "/gaojian/index.php",
-                  method: "post",
-                  params: this.params({
-                    act: "author_list",
-                    p_id: sessionStorage.userId
-                  })
-                })
-                  .then(res => {
-                    this.author_list = res.data.result;
-                    this.$message.success("删除成功！");
-                  })
-                  .catch(err => {
-                    console.log(err);
-                  });
-              } else {
-                this.$message.warning(res.data.message);
-              }
-            })
-            .catch(err => {
-              console.log(err);
-            });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
+      this.author_list.splice(index,1)
     },
     //步骤3保存并跳转到步骤4
     saveAndContinue3() {
       if (this.author_list.length == 0) {
-        this.$message.warning("请至少添加一位作者！");
+        this.$message.warning("Please add at least one author!");
       } else {
         this.author_list.forEach(item => {
           if (item.choose == true) {
@@ -495,8 +445,9 @@ export default {
             this.body3 = false;
             this.body4 = true;
             this.body5 = false;
+            return false
           } else {
-            this.$message.warning("请选择一位联系作者！");
+            this.$message.warning("Please choose one corresponding author!");
           }
         });
       }
@@ -551,7 +502,7 @@ export default {
             this.body4 = false;
             this.body5 = true;
           } else {
-            this.$message.warning("提交失败！");
+            this.$message.warning("Submit unsuccessfully");
           }
         })
         .catch(err => {
@@ -562,21 +513,19 @@ export default {
     //上传文件成功的钩子函数
     uploadSuccess(res) {
       if (res.code === 200) {
-        this.$message.success("上传成功！");
+        this.$message.success("Upload successfully");
         this.form.file = res.result;
       } else {
-        this.$message.warning(res.message);
+        this.$message.warning('Upload unsuccessfully');
       }
     },
     handleExceed(files, fileList) {
       this.$message.warning(
-        `当前限制选择 1个文件，本次选择了 ${
-          files.length
-        } 个文件，共选择了 ${files.length + fileList.length} 个文件`
+        `You can upload one file.`
       );
     },
     beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`);
+      return this.$confirm(`Deleted ${file.name}？`);
     }
   },
   created() {
@@ -726,6 +675,11 @@ export default {
         color: #444444;
         line-height: 32px;
       }
+      p.up{
+        display: flex;
+        justify-content: center;
+        align-items:center;
+      }
     }
     .add-author {
       width: 100%;
@@ -764,6 +718,16 @@ export default {
     /deep/ .el-upload {
       display: flex;
       justify-content: flex-start;
+      /deep/ button{
+        background: #b22f29;
+        .el-icon-upload{
+          margin-left: -15px;
+          font-size: 16px;
+        }
+        span{
+          margin-left: 5px;
+        }
+      }
     }
     button {
       display: flex;
@@ -802,9 +766,9 @@ export default {
       font-family: ArialMT;
       font-size: 20px;
       background: none;
-      color: #444;
+      color: #2aace8;
       font-weight: 400;
-      border-bottom: 1px solid #e3e3e3;
+      border-bottom: 2px solid #2aace8;
       margin-top: 20px;
       padding: 20px;
       box-sizing: border-box;
@@ -816,22 +780,12 @@ export default {
         height: 64px;
         text-align: center;
         color: #444;
-        font-size: 16px;
+        font-size: 14px;
         border: 1px solid #eaeaea;
         text-align: left;
         padding: 20px;
         box-sizing: border-box;
       }
-      tr:first-child {
-        font-weight: 700;
-      }
-    }
-    .abstract-info {
-      margin-top: 20px;
-      color: #2aace8;
-      border-bottom: 2px solid #2aace8;
-      padding-bottom: 20px;
-      box-sizing: border-box;
     }
     .table2 {
       tr td:first-child {

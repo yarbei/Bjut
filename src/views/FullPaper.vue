@@ -4,11 +4,8 @@
       <div class="head">{{head}}</div>
       <div class="body" v-show="body1">
         <img src="../assets/img/fullstep1.png" alt>
-        <div
-          class="note"
-        >Choose the proper topic for this abstract from the "Topic" below. It is extremely important that you properly categorize your abstract so that it will go to the appropriate review group.</div>
         <el-form ref="form" :model="form" label-width="170px">
-          <el-form-item label="Paper Title:" required>
+          <el-form-item label="Title:" required>
             <el-input v-model="form.paper_title"></el-input>
           </el-form-item>
           <el-form-item label="Abstract:" required>
@@ -19,26 +16,23 @@
           </el-form-item>
         </el-form>
         <div class="button-box">
-          <button class="return" @click="backToUserCenter">Return</button>
+          <button class="return" @click="backToUserCenter">Back</button>
           <button @click="saveAndContinue('form')">Save and Continue</button>
         </div>
       </div>
       <div class="body body2" v-show="body2">
         <img src="../assets/img/fullstep2.png" alt>
-        <div class="note">Upload Extend Full-Paper :</div>
+        <div class="note">Upload Full Paper :</div>
         <div class="upload">
           <p>
-            Upload Notes:
+            Notes:
             <br>(1) Only original and unpublished works are invited.
-            <br>(2) All full-paper must be submitted in English.
-            <br>(3) All full-paper should be submitted no later than Aug. 31, 2019, via email to the secretariat isrerm2020@bjut.edu.cn.
-            <br>(4) The symposium will only call for Oral presentation.
-            <br>(5) Corresponding author will receive all correspondence concerning the submission and is responsible for informing the other authors of the status of the submission.
+            <br>(2) Full paper must be submitted in English.
+            <br>(3) Full paper must be prepared with the following Templete.
             <br>
-            <a href class="el-icon-download">Abstract Template.doc</a>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../template/Full-paper Template.doc" download="" class="el-icon-download">Full-paper Template.doc</a>
           </p>
           <p class="up">
-          <span>*Extend Abstract</span>
           <el-upload
             class="upload-demo"
             :action="filed"
@@ -49,26 +43,26 @@
             :file-list="fileList"
             :data="act"
           >
-            <el-button class="el-icon-upload" size="small" type="primary">Upload Full-Paper </el-button>
+            <el-button class="el-icon-upload" size="small" type="primary"> &nbsp;&nbsp;Upload</el-button>
           </el-upload>
           </p>
         </div>
         <div class="button-box">
-          <button class="return" @click="returnStep1">Return</button>
-          <button @click="saveAndContinue2">Save and Continue</button>
+          <button class="return" @click="returnStep1">Back</button>
+          <button @click="saveAndContinue2">Confirm and Submit</button>
         </div>
       </div>
       <div class="body body3" v-show="body3">
         <h1>
-          The full-paper was submitted successfully, ID as:
+          The full paper was submitted successfully, ID as:
           <span>{{full_id}}</span>
         </h1>
         <p>
-          A confirmation email with important information concerning your full-paper has been sent to your email address as following:
-          <br>If you do not receive a confirmation email within the next few hours, please:
-          <br>• Make sure the email address listed above are correct and valid
+          A confirmation email will be sent to your email address.
+          <br>If you do not receive the confirmation email, please:
+          <br>• Make sure your email address is correct and valid
           <br>• Check your junk mail or spam folder to make sure it did not end up there by accident
-          <br>If you have questions, please contact the conference group isrerm2020@bjut.edu.cn
+          <br>If you have questions, please contact the secretariat via isrerm2020@gmail.com,
           <br>Thank you.
         </p>
         <button class="back-to-usercenter" @click="backToUserCenter">Back to User Center</button>
@@ -114,11 +108,11 @@ export default {
           this.body2 = true;
           this.body3 = false;
         } else {
-          this.$message.warning("abstract必填！");
+          this.$message.warning("Full paper is required.");
           return false;
         }
       } else {
-        this.$message.warning("paper_title必填！");
+        this.$message.warning("Title is required.");
         return false;
       }
     },
@@ -153,34 +147,32 @@ export default {
               this.body2 = false;
               this.body3 = true;
             } else {
-              this.$message.warning("提交失败！");
+              this.$message.warning("Submit unsuccessfully");
             }
           })
           .catch(err => {
             console.log(err);
           });
       } else {
-        this.$message.warning("文件必传！");
+        this.$message.warning("File is required.");
       }
     },
     //上传文件的钩子函数
     uploadSuccess(res) {
       if (res.code === 200) {
-        this.$message.success("上传成功！");
+        this.$message.success("Upload successfully");
         this.form.file = res.result;
       } else {
-        this.$message.warning(res.message);
+        this.$message.warning('Upload unsuccessfully');
       }
     },
     handleExceed(files, fileList) {
       this.$message.warning(
-        `当前限制选择 1个文件，本次选择了 ${
-          files.length
-        } 个文件，共选择了 ${files.length + fileList.length} 个文件`
+        `You can upload one file.`
       );
     },
     beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`);
+      return this.$confirm(`Are you sure to delete ${file.name}？`);
     }
   }
 };
@@ -228,6 +220,7 @@ export default {
     p.up {
       display: flex;
       align-items: center;
+      justify-content: center;
       span {
         font-family: ArialMT;
         font-size: 16px;
@@ -305,9 +298,6 @@ export default {
         font-size: 16px;
         color: #444444;
         line-height: 32px;
-        a{
-          color: #444;
-        }
       }
     }
   }

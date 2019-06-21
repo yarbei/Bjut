@@ -7,7 +7,6 @@
     <ul>
       <li v-for="item in nav" :key="item.id" :class="{'active':item.id===isActive}">
         <router-link :to="item.url_s">
-          <i class="icon"></i>
           <span>{{item.title}}</span>
         </router-link>
       </li>
@@ -81,7 +80,9 @@ export default {
       a {
         width: 100%;
         span {
-          width: 100%;
+          width: 70%;
+          margin: 0 auto;
+          text-align: center;
           font-size: 18px;
           color: #fff;
           display: flex;
@@ -101,11 +102,8 @@ export default {
         i.icon {
           width: 27px;
           height: 24px;
-          margin-left: 38px;
+          margin-left: 28px;
           background: url("../assets/img/dragon.png") no-repeat center / cover;
-        }
-        span {
-          width: 140px;
         }
       }
     }

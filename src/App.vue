@@ -58,8 +58,8 @@ export default {
     align-items: flex-start;
     .content {
       min-height: 50vh;
-      input,textarea,tr td{
-        border:1px solid #666 !important;
+      input,textarea,/deep/ .el-radio__inner{
+        border:1px solid #b1afaf !important;
       }
       p.copyright {
         width: 910px;

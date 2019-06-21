@@ -6,11 +6,12 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import locale from 'element-ui/lib/locale/lang/en'
 import '@/assets/css/reset.css'
 import '@/filters'
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios)
-Vue.use(ElementUI)
+Vue.use(ElementUI,{ locale })
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 
 Vue.prototype.params=function(parameter){
