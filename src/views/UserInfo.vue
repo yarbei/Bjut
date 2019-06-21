@@ -33,18 +33,6 @@
               <el-radio label="0">Famale</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="Birthday">
-            <el-col>
-              <el-form-item>
-                <el-date-picker
-                  type="date"
-                  placeholder
-                  v-model="ruleForm.p_birthday"
-                  style="width: 100%;"
-                ></el-date-picker>
-              </el-form-item>
-            </el-col>
-          </el-form-item>
           <el-form-item label="Student" prop="p_student">
             <el-radio-group v-model="ruleForm.p_student">
               <el-radio label="1">Yes</el-radio>
@@ -135,7 +123,6 @@ export default {
         p_middle_name: "",
         p_last_name: "",
         p_gender: "",
-        p_birthday: "",
         p_student: "",
         p_title: "",
         p_affiliation: "",
@@ -271,7 +258,6 @@ export default {
         this.ruleForm.p_middle_name = data.p_middle_name;
         this.ruleForm.p_last_name = data.p_last_name;
         this.ruleForm.p_gender = data.p_gender;
-        this.ruleForm.p_birthday = data.p_birthday;
         this.ruleForm.p_student = data.p_student;
         this.ruleForm.p_title = data.p_title;
         this.ruleForm.p_affiliation = data.p_affiliation;
