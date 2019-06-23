@@ -27,7 +27,7 @@
             </td>
           </tr>
         </table>
-        <button @click="toAbstractSubmission">Submit a Abstract</button>
+        <button @click="toAbstractSubmission">Submit an Abstract</button>
       </div>
     </div>
     <div class="info-box">
@@ -99,8 +99,8 @@ export default {
         this.$router.push({ path: "/abstractSubmission?id=9" });
       } else {
         this.$alert(
-          "您还没有完善个人信息，请先完善个人信息！点击确定前往个人信息页面!",
-          "提示"
+          "You haven't improved your personal information yet. Please improve your personal information first! Click OK to go to the Personal Information page!",
+          "Tips"
         ).then(() => {
           this.$router.push({ path: "/userInfo" });
         });
@@ -112,8 +112,8 @@ export default {
         this.$router.push({ path: "/fullpaper?id=9" });
       } else {
         this.$alert(
-          "您还没有上传摘要，请先上传摘要！点击确定前往上传摘要页面!",
-          "提示"
+          "You haven't uploaded the abstract yet, please upload the abstract first! Click OK to upload the summary page!",
+          "Tips"
         ).then(() => {
           this.$router.push({ path: "/abstractSubmission?id=9" });
         });

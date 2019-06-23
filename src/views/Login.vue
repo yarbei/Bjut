@@ -84,7 +84,7 @@
         <button @click="RegisterReturn">Back</button>
       </div>
       <div class="content2" v-show="isContent2">
-        <h1>Four-step operation to reset your password:</h1>
+        <h1>Three-step operation to reset your password:</h1>
         <p>1. Click on "Forgot your password?".</p>
         <p>2. Input the registered email address and new password.</p>
         <p>3. Click the confirmation link in the email. Reset the password successfully.</p>

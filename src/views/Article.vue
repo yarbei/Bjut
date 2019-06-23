@@ -9,14 +9,12 @@
           <div class="submission" v-show="submission">
             <div v-html="article.content"></div>
             <button
-              class="el-icon-upload2"
               @click="toAbstractSubmission"
-            >&nbsp;&nbsp;Please upload Abstract</button>
+            >Submit an Abstract</button>
             <div v-html="article.contents"></div>
             <button
-              class="el-icon-upload2"
               @click="toFullPaper"
-            >&nbsp;&nbsp;Please upload Full-Paper</button>
+            >Submit an Full-Paper</button>
           </div>
         </div>
       </div>

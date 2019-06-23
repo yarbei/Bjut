@@ -283,12 +283,12 @@ export default {
           this.isInfo = false;
           this.isNotInfo = true;
           this.noet =
-            "Note:This information will be used to generate your name badge and for all emailings.";
+            "Note: This information will be used to generate your name badge and for all emailings.";
         } else {
           this.isInfo = true;
           this.isNotInfo = false;
           this.note =
-            "Note:This information will be used to generate your name badge, so please complete all fields accurately.";
+            "Note: This information will be used to generate your name badge, so please complete all fields accurately.";
         }
       })
       .catch(err => {
