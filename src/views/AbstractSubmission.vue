@@ -247,7 +247,7 @@ export default {
     //返回个人中心
     backToUserCenter() {
       this.$router.push({
-        path: this.$route.matched[this.$route.matched.length - 2].name
+        path: '/userCenter'
       });
     },
     //保存步骤1并继续

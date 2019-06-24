@@ -165,8 +165,9 @@ img.banner {
       border-top: 1px solid #b22f29;
       margin-top: 30px;
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       flex-direction: column;
+      align-items: flex-start;
       a{
         font-size: 18px;
       }
