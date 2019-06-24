@@ -62,7 +62,7 @@
           <br>If you do not receive the confirmation email, please:
           <br>• Make sure your email address is correct and valid
           <br>• Check your junk mail or spam folder to make sure it did not end up there by accident
-          <br>If you have questions, please contact the secretariat via isrerm2020@gmail.com,
+          <br>If you have questions, please contact the secretariat via isrerm2020@bjut.edu.cn,
           <br>Thank you.
         </p>
         <button class="back-to-usercenter" @click="backToUserCenter">Back to User Center</button>
