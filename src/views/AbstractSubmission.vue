@@ -439,17 +439,16 @@ export default {
         this.$message.warning("Please add at least one author!");
       } else {
         this.author_list.forEach(item => {
-          if (item.choose == true) {
+          if (item.choose === true) {
             this.body1 = false;
             this.body2 = false;
             this.body3 = false;
             this.body4 = true;
             this.body5 = false;
-            return false
-          } else {
-            this.$message.warning("Please choose one corresponding author!");
-          }
+          } 
+          return false
         });
+        this.$message.warning("Please choose one corresponding author!");
       }
     },
     //步骤4返回步骤3
