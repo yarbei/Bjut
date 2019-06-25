@@ -24,8 +24,6 @@ Vue.prototype.params=function(parameter){
 
 
 Vue.config.productionTip = false
-
-document.title='北京工业大学'
 new Vue({
   router,
   store,
