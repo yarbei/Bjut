@@ -37,8 +37,12 @@
             <br>(1) Only original and unpublished works are invited.
             <br>(2) Abstract must be submitted in English.
             <br>(3) Abstract must be prepared with the following Templete.
-          </p>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../template/Abstract Template.doc" download="" class="el-icon-download">Abstract Template.doc</a>
+          </p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <a
+            href="../template/Abstract Template.doc"
+            download
+            class="el-icon-download"
+          >Abstract Template.doc</a>
           <p class="up">
             <el-upload
               class="upload-demo"
@@ -65,13 +69,14 @@
           Add Author
           <!-- <el-checkbox @change="useMyInfomation" v-model="my_infomation">Use My infomation</el-checkbox> -->
         </div>
-        <div
-          class="note"
-        >Please choose a corresponding author before "Save and Continue".</div>
+        <div class="note">Please choose a corresponding author before "Save and Continue".</div>
         <el-form ref="form" :model="form" label-width="150px">
           <el-form-item label=" ">
             <!-- <el-checkbox v-model="corresponding_author">Corresponding Author</el-checkbox> -->
-            <el-checkbox @change="useMyInfomation" v-model="my_infomation">Extract account information</el-checkbox>
+            <el-checkbox
+              @change="useMyInfomation"
+              v-model="my_infomation"
+            >Extract account information</el-checkbox>
           </el-form-item>
           <el-form-item label="First Name" required>
             <el-input v-model="form.first_name"></el-input>
@@ -108,7 +113,10 @@
           <el-table-column prop="author_affiliation" label="Affiliation" align="center"></el-table-column>
           <el-table-column label="Corresponding Author" align="center">
             <template slot="header" slot-scope="scope">
-              <span>Corresponding<br>Author</span>
+              <span>
+                Corresponding
+                <br>Author
+              </span>
             </template>
             <template scope="scope">
               <el-radio
@@ -173,7 +181,7 @@
           <tr>
             <td>Abstract File</td>
             <td>
-              <a download="" :href="form.file" class="download el-icon-download">&nbsp;&nbsp;Download</a>
+              <a download :href="form.file" class="download el-icon-download">&nbsp;&nbsp;Download</a>
             </td>
           </tr>
         </table>
@@ -438,18 +446,22 @@ export default {
       if (this.author_list.length == 0) {
         this.$message.warning("Please add at least one author!");
       } else {
+        let flag=false;
         this.author_list.forEach(item => {
           if (item.choose == true) {
+            flag=true;
+            return false;
+          }
+        });
+        if(flag==true){
             this.body1 = false;
             this.body2 = false;
             this.body3 = false;
             this.body4 = true;
             this.body5 = false;
-            return false
-          } else {
+        }else{
             this.$message.warning("Please choose one corresponding author!");
-          }
-        });
+        }
       }
     },
     //步骤4返回步骤3
@@ -675,10 +687,10 @@ export default {
         color: #444444;
         line-height: 32px;
       }
-      p.up{
+      p.up {
         display: flex;
         justify-content: center;
-        align-items:center;
+        align-items: center;
       }
     }
     .add-author {
@@ -718,13 +730,13 @@ export default {
     /deep/ .el-upload {
       display: flex;
       justify-content: flex-start;
-      /deep/ button{
+      /deep/ button {
         background: #b22f29;
-        .el-icon-upload{
+        .el-icon-upload {
           margin-left: -15px;
           font-size: 16px;
         }
-        span{
+        span {
           margin-left: 5px;
         }
       }
