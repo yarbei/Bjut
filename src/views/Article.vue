@@ -21,7 +21,7 @@
               download
               class="el-icon-download"
             >Full-paper Template.doc</a>
-            <button @click="toFullPaper">Submit an Full-Paper</button>
+            <button @click="toFullPaper">Submit a Full-Paper</button>
           </div>
         </div>
       </div>
