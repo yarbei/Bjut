@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "dev": "vue-cli-service serve --host 192.168.1.156",
+    "dev": "vue-cli-service serve --host 192.168.1.175",
     "start": "vue-cli-service serve"
   },
   "dependencies": {
