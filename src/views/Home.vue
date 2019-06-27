@@ -7,7 +7,7 @@
       <div class="word">
         <h1>ISRERM2020</h1>
         <p>7th International Symposium on Reliability Engineering and Risk Management</p>
-        <p>Jun. 5-7, 2020 | Beijing, China.</p>
+        <p>Jun. 5-8, 2020 | Beijing, China.</p>
       </div>
     </el-carousel>
     <div class="content">
