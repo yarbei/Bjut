@@ -96,7 +96,7 @@ export default {
     //点击按钮跳转AbstractSubmission
     toAbstractSubmission() {
       if (this.userInfo.p_first_name) {
-        this.$router.push({ path: "/abstractSubmission?id=9" });
+        this.$router.push({ path: "/abstractSubmission" });
       } else {
         this.$alert(
           "You haven't improved your personal information yet. Please improve your personal information first! Click OK to go to the Personal Information page!",
@@ -109,7 +109,7 @@ export default {
     //点击按钮跳转FullPaper
     toFullPaper() {
       if (this.ab_list.length != 0) {
-        this.$router.push({ path: "/fullpaper?id=9" });
+        this.$router.push({ path: "/fullpaper" });
       } else {
         this.$alert(
           "You haven't uploaded the abstract yet, please upload the abstract first! Click OK to upload the summary page!",

@@ -6,15 +6,22 @@
         <h1 class="title">{{article.title}}</h1>
         <div class="content">
           <div v-html="article.content" v-show="isArticle"></div>
+          <button v-show="registration" class="registration">Online Registration</button>
           <div class="submission" v-show="submission">
             <div v-html="article.content"></div>
-            <button
-              @click="toAbstractSubmission"
-            >Submit an Abstract</button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+              href="../template/Abstract Template.doc"
+              download
+              class="el-icon-download"
+            >Abstract Template.doc</a>
+            <button @click="toAbstractSubmission">Submit an Abstract</button>
             <div v-html="article.contents"></div>
-            <button
-              @click="toFullPaper"
-            >Submit an Full-Paper</button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+              href="../template/Full-paper Template.doc"
+              download
+              class="el-icon-download"
+            >Full-paper Template.doc</a>
+            <button @click="toFullPaper">Submit a Full-Paper</button>
           </div>
         </div>
       </div>
@@ -32,10 +39,10 @@ export default {
         contents: ""
       },
       id: null,
-      committee: false,
       submission: false,
       isArticle: true,
-      committeeList: []
+      committeeList: [],
+      registration: false
     };
   },
   methods: {
@@ -54,8 +61,8 @@ export default {
               this.$router.push({ path: "/abstractSubmission" });
             } else {
               this.$alert(
-                "您还没有完善个人信息，请先完善个人信息！点击确定前往个人信息页面!",
-                "提示"
+                "You haven't improved your personal information yet. Please improve your personal information first! Click OK to go to the Personal Information page!",
+                "Tips"
               ).then(() => {
                 this.$router.push({ path: "/userInfo" });
               });
@@ -83,8 +90,8 @@ export default {
               this.$router.push({ path: "/fullpaper" });
             } else {
               this.$alert(
-                "您还没有上传摘要，请先上传摘要！点击确定前往上传摘要页面!",
-                "提示"
+                "You haven't uploaded the abstract yet, please upload the abstract first! Click OK to upload the summary page!",
+                "Tips"
               ).then(() => {
                 this.$router.push({ path: "/abstractSubmission" });
               });
@@ -103,6 +110,9 @@ export default {
     if (id == 9) {
       this.isArticle = false;
       this.submission = true;
+    }
+    if (id == 8) {
+      this.registration = true;
     }
     this.axios({
       method: "post",
@@ -154,6 +164,28 @@ img.banner {
       box-sizing: border-box;
       border-top: 1px solid #b22f29;
       margin-top: 30px;
+      display: flex;
+      justify-content: flex-start;
+      flex-direction: column;
+      align-items: flex-start;
+      a{
+        font-size: 18px;
+      }
+      .registration {
+        padding: 20px 70px;
+        box-sizing: border-box;
+        background: #b8b8b8;
+        box-shadow: 0px 6px 12px 0px rgba(184, 184, 184, 0.25);
+        border: 0;
+        margin: 0 auto;
+        font-family: ArialMT;
+        font-size: 18px;
+        font-weight: normal;
+        font-stretch: normal;
+        line-height: 20px;
+        letter-spacing: 0px;
+        color: #ffffff;
+      }
       .submission {
         width: 100%;
         h1,
