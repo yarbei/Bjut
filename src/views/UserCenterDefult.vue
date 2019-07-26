@@ -67,7 +67,7 @@
             <td></td>
           </tr>
         </table>
-        <a class="button" :href="Participation.url_now">Registration now</a>
+        <button @click="toRegistration">Registration now</button>
       </div>
     </div>
   </div>
@@ -118,6 +118,10 @@ export default {
           this.$router.push({ path: "/abstractSubmission?id=9" });
         });
       }
+    },
+    //点击按钮跳转Registration
+    toRegistration(){
+      this.$router.push({path:'/registration'})
     }
   },
   created() {

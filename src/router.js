@@ -54,15 +54,6 @@ export default new Router({
         }
       },
       {
-        path:'/summary',
-        name:'summary?id=8',
-        component: ()=>
-        import('./views/Summary.vue'),
-        meta:{
-          title:"Summary"
-        }
-      },
-      {
         path:'/abstractSubmission',
         name:'abstractSubmission',
         component: ()=>
@@ -87,6 +78,15 @@ export default new Router({
         import('./views/FullPaper.vue'),
         meta:{
           title:'Full Paper Submission'
+        }
+      },
+      {
+        path:'/registration',
+        name:'registration',
+        component: ()=>
+        import('./views/Registration.vue'),
+        meta:{
+          title:'Registration'
         }
       },
       ]
