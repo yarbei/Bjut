@@ -55,19 +55,19 @@
       <div class="body">
         <table class="table3" border="1">
           <tr>
-            <td>Registration fee</td>
+            <td>{{isPay==false?"Registration fee":"Category"}}</td>
             <td>{{Participation.registration_fee}}</td>
           </tr>
           <tr>
-            <td>Accommodation reservation</td>
+            <td>{{isPay==false?"Accommodation reservation":"Fee"}}</td>
             <td>{{Participation.hotel}}</td>
           </tr>
           <tr>
-            <td>Tour visit</td>
+            <td>{{isPay==false?"Tour visit":"Tour Reservation"}}</td>
             <td></td>
           </tr>
         </table>
-        <button @click="toRegistration">Registration now</button>
+        <button @click="toRegistration">Registration Now</button>
       </div>
     </div>
   </div>
@@ -81,6 +81,7 @@ export default {
       userInfo: {},
       ab_list: [],
       full_list: [],
+      isPay:false,
       Participation: {
         hotel: "",
         registration_fee: "",
